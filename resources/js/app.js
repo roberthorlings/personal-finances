@@ -6,7 +6,7 @@
 
 import Vue from 'vue'
 import VueRouter from 'vue-router';
-import './vuematerial';
+import vuetify from './vuetify';
 import routes from './routes';
 
 /**
@@ -25,7 +25,6 @@ Vue.use(VueRouter)
 // Create the router instance and pass the `routes` option
 const router = new VueRouter({routes});
 
-
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -34,5 +33,6 @@ const router = new VueRouter({routes});
 
 const app = new Vue({
     el: '#app',
-    router
+    router,
+    vuetify
 });

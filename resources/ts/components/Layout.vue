@@ -81,8 +81,7 @@
         <v-app-bar
             :clipped-left="$vuetify.breakpoint.lgAndUp"
             app
-            color="blue darken-3"
-            dark
+            :color="$vuetify.theme.themes.light.primary"
         >
             <v-toolbar-title
                 style="width: 400px"
@@ -106,8 +105,10 @@
                 class="fill-height"
                 fluid
             >
-                <router-view>
-                </router-view>
+                <v-layout child-flex>
+                    <router-view>
+                    </router-view>
+                </v-layout>
             </v-container>
         </v-content>
     </v-app>

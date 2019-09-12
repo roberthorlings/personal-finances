@@ -8,6 +8,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router';
 import vuetify from './vuetify';
 import routes from './routes';
+import './axios';
 
 /**
  * The following block of code may be used to automatically register your

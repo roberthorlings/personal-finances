@@ -17,6 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/categories/tree', 'CategoryController@tree');
 Route::apiResource('categories', 'CategoryController');
 Route::apiResource('accounts', 'AccountController');
 Route::apiResource('transactions', 'TransactionController');

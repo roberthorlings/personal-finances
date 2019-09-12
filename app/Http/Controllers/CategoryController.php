@@ -5,17 +5,30 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Model\Category;
 use App\Resources\Category as CategoryResource;
+use App\Resources\CategoryTree as CategoryTreeResource;
 
 class CategoryController extends Controller
 {
+    const DEFAULT_PER_PAGE = 25;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return CategoryResource::collection(Category::paginate(25));
+        return CategoryResource::collection(Category::paginate($request->get("per_page", self::DEFAULT_PER_PAGE)));
+    }
+
+    /**
+     * Display a tree listing of all categories
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function tree()
+    {
+        return CategoryTreeResource::collection(Category::get()->toTree());
     }
 
     /**

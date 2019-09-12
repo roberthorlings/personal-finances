@@ -8,14 +8,16 @@ use App\Resources\Account as AccountResource;
 
 class AccountController extends Controller
 {
+    const DEFAULT_PER_PAGE = 25;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return AccountResource::collection(Account::paginate(25));
+        return AccountResource::collection(Account::paginate($request->get("per_page", self::DEFAULT_PER_PAGE)));
     }
 
     /**

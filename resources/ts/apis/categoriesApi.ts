@@ -3,7 +3,7 @@ import axios from "axios";
 
 const API_ENDPOINT = '/api/categories';
 
-interface Category extends Identifyable {
+export interface Category extends Identifyable {
     name: string,
     parent_id: number,
     children?: Category[],

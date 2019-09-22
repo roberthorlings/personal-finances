@@ -20,10 +20,14 @@
                         <v-container>
                             <v-row>
                                 <v-col cols="12" md="12" lg="6">
-                                    <v-text-field v-model="editedItem.name" label="Account name"></v-text-field>
+                                    <v-text-field v-model="editedItem.name" label="Category name"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="12" lg="6">
-                                    <v-text-field v-model="editedItem.iban" label="IBAN"></v-text-field>
+                                    <v-autocomplete
+                                        v-model="editedItem.parent_id"
+                                        :items="autoCompleteItems"
+                                        item-value="id"
+                                    ></v-autocomplete>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -39,8 +43,33 @@
         </v-toolbar>
         <v-treeview
             dense
+            activatable
             :items="items"
-        ></v-treeview>
+        >
+            <template v-slot:append="{item}">
+                <v-icon
+                    small
+                    class="mr-2"
+                    @click="addChild(item)"
+                >
+                    add
+                </v-icon>
+                <v-icon
+                    small
+                    class="mr-2"
+                    @click="editItem(item)"
+                >
+                    edit
+                </v-icon>
+                <v-icon
+                    small
+                    @click="deleteItem(item)"
+                >
+                    delete
+                </v-icon>
+            </template>
+
+        </v-treeview>
     </v-sheet>
 </template>
 
@@ -52,13 +81,14 @@
             dialog: false,
             loading: true,
             items: [],
-            editedItem: {}
+            editedItem: {},
+            formTitle: 'New category'
         }),
 
         computed: {
-            formTitle () {
-                return this.isEditing() ? 'Edit category' : 'New category'
-            },
+            autoCompleteItems() {
+                return this.toFlatList(this.items);
+            }
         },
 
         watch: {
@@ -79,9 +109,6 @@
                     parent_id: undefined
                 }
             },
-            isEditing() {
-                return this.editedItem.id;
-            },
             getDataFromApi () {
                 this.loading = true;
                 return CategoriesApi.tree().then(data => {
@@ -90,12 +117,36 @@
                 });
             },
 
+            toFlatList(items, prefix = '') {
+                if(!items || items.length === 0)
+                    return [];
+
+                return items.reduce((list, item) => {
+                    return [
+                        ...list,
+                        {
+                            ...item,
+                            text: `${prefix} ${item.name}`
+                        },
+                        ...this.toFlatList(item.children, prefix + '--')
+                    ];
+                }, []);
+            },
+
             addItem() {
+                this.formTitle = 'New category';
                 this.resetForm();
                 this.dialog = true
             },
 
+            addChild (item) {
+                this.formTitle = 'Add child category to ' + item.name;
+                this.editedItem = {parent_id: item.id};
+                this.dialog = true
+            },
+
             editItem (item) {
+                this.formTitle = `Edit category ${item.name} (${item.id})`;
                 this.editedItem = {...item};
                 this.dialog = true
             },

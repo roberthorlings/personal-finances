@@ -15,7 +15,7 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        return TransactionResource::collection(Transaction::paginate(25));
+        return TransactionResource::collection(Transaction::with(['category', 'account'])->paginate(25));
     }
 
     /**

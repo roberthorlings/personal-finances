@@ -16,6 +16,7 @@ class Transaction extends JsonResource
     {
         return [
             'id' => $this->id,
+            'date' => (string) $this->date,
             'description' => $this->description,
             'opposing_account' => [
                 'name' => $this->opposing_account_name,
@@ -23,7 +24,9 @@ class Transaction extends JsonResource
             ],
             'amount' => $this->amount,
             'category_id' => $this->category_id,
+            'category' => $this->category ? (new Category($this->category))->toArray($request) : null,
             'account_id' => $this->account_id,
+            'account' => $this->account ? (new Account($this->account))->toArray($request) : null,
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at
         ];

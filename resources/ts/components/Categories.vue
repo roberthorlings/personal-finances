@@ -7,6 +7,9 @@
             <v-toolbar-title>Categories</v-toolbar-title>
             <v-divider class="mx-4" inset vertical></v-divider>
             <div class="flex-grow-1"></div>
+            <v-btn text icon color="primary" @click="getDataFromApi">
+                <v-icon>mdi-cached</v-icon>
+            </v-btn>
             <v-dialog v-model="dialog" max-width="500px">
                 <template v-slot:activator="{ on }">
                     <v-btn color="primary" dark class="mb-2" v-on="on">New category</v-btn>
@@ -70,6 +73,19 @@
             </template>
 
         </v-treeview>
+        <v-snackbar
+            v-model="error"
+            :timeout="4000"
+        >
+            An error occurred while loading the accounts.
+            <v-btn
+                color="pink"
+                text
+                @click="this.getDataFromApi"
+            >
+                Retry
+            </v-btn>
+        </v-snackbar>
     </v-sheet>
 </template>
 
@@ -79,6 +95,7 @@
         name: 'Categories',
         data: () => ({
             dialog: false,
+            error: false,
             loading: true,
             items: [],
             editedItem: {},
@@ -111,10 +128,16 @@
             },
             getDataFromApi () {
                 this.loading = true;
-                return CategoriesApi.tree().then(data => {
-                    this.loading = false;
-                    this.items = data;
-                });
+                this.error = false;
+                return CategoriesApi.tree()
+                    .then(data => {
+                        this.loading = false;
+                        this.items = data;
+                    })
+                    .catch(e => {
+                        this.loading = false;
+                        this.error = true;
+                    });
             },
 
             toFlatList(items, prefix = '') {

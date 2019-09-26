@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 export interface ListOptions {
-    sortBy: string,
+    sortBy: string[],
+    sortDesc: boolean[],
     descending: boolean,
     page: number,
     itemsPerPage: number
@@ -24,6 +25,8 @@ export default <T extends Identifyable>(endpoint: string) => {
             endpoint,
             {
                 params: {
+                    sortBy: options.sortBy[0],
+                    sortOrder: options.sortDesc[0] ? 'desc' : 'asc',
                     page: options.page || 1,
                     per_page: options.itemsPerPage > -1 ? options.itemsPerPage : undefined
                 }

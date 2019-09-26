@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Account;
 use Illuminate\Http\Request;
 use App\Model\Category;
 use App\Resources\Category as CategoryResource;
@@ -9,7 +10,7 @@ use App\Resources\CategoryTree as CategoryTreeResource;
 
 class CategoryController extends Controller
 {
-    const DEFAULT_PER_PAGE = 25;
+    use SortAndPaginate;
 
     /**
      * Display a listing of the resource.
@@ -18,7 +19,9 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        return CategoryResource::collection(Category::paginate($request->get("per_page", self::DEFAULT_PER_PAGE)));
+        return CategoryResource::collection(
+            $this->getPaginatedAndSorted($request, Category::query())
+        );
     }
 
     /**

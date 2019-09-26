@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Model\Category;
 use App\Model\Transaction;
 use App\Resources\Transaction as TransactionResource;
+use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
+    use SortAndPaginate;
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return TransactionResource::collection(Transaction::with(['category', 'account'])->paginate(25));
+        $queryBuilder = Transaction::with(['category', 'account'])
+            ->leftJoin('categories as category', 'transactions.category_id', '=', 'category.id')
+            ->leftJoin('accounts as account', 'transactions.account_id', '=', 'account.id');
+
+        return TransactionResource::collection($this->getPaginatedAndSorted($request, $queryBuilder, ['transactions.*']));
     }
 
     /**

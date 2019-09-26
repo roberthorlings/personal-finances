@@ -9,7 +9,7 @@ export interface OpposingAccount {
 }
 
 export interface Transaction extends Identifyable {
-    date: Date,
+    date: string,
     description: string,
     amount: number,
     account: Account,

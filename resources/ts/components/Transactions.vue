@@ -29,6 +29,9 @@
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12" md="12" lg="6">
+                                            <DatePickerInput v-model="editedItem.date" label="Date"></DatePickerInput>
+                                        </v-col>
+                                        <v-col cols="12" md="12" lg="6">
                                             <v-text-field v-model="editedItem.description" label="Description"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" md="12" lg="6">
@@ -129,7 +132,7 @@ mounted () {
 methods: {
     resetForm () {
         this.editedItem = {
-            date: new Date(),
+            date: new Date().toISOString().substr(0, 10),
             description: '',
             account_id: ''
         }

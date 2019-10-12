@@ -3,7 +3,6 @@ import axios from 'axios';
 export interface ListOptions {
     sortBy: string[],
     sortDesc: boolean[],
-    descending: boolean,
     page: number,
     itemsPerPage: number
 }
@@ -18,9 +17,15 @@ export interface Identifyable {
 }
 
 const itemEndpoint = (endpoint: string, id: number) => endpoint + '/' + id;
+const DEFAULT_LIST_OPTIONS = {
+    sortBy: [],
+    sortDesc: [],
+    page: 1,
+    itemsPerPage: 25
+};
 
 export default <T extends Identifyable>(endpoint: string) => {
-    const list = (options: ListOptions): Promise<ListResult<T>> =>
+    const list = (options: ListOptions = DEFAULT_LIST_OPTIONS): Promise<ListResult<T>> =>
         axios.get(
             endpoint,
             {

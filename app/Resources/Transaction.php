@@ -22,7 +22,7 @@ class Transaction extends JsonResource
                 'name' => $this->opposing_account_name,
                 'iban' => $this->opposing_account_iban
             ],
-            'amount' => $this->amount,
+            'amount' => floatval($this->amount),
             'category_id' => $this->category_id,
             'category' => $this->category ? (new Category($this->category))->toArray($request) : null,
             'account_id' => $this->account_id,

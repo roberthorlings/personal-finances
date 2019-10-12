@@ -91,6 +91,7 @@
 
 <script>
     import CategoriesApi from '../apis/categoriesApi';
+    import {toFlatList} from "../utils";
     export default {
         name: 'Categories',
         data: () => ({
@@ -104,7 +105,7 @@
 
         computed: {
             autoCompleteItems() {
-                return this.toFlatList(this.items);
+                return toFlatList(this.items);
             }
         },
 
@@ -139,23 +140,6 @@
                         this.error = true;
                     });
             },
-
-            toFlatList(items, prefix = '') {
-                if(!items || items.length === 0)
-                    return [];
-
-                return items.reduce((list, item) => {
-                    return [
-                        ...list,
-                        {
-                            ...item,
-                            text: `${prefix} ${item.name}`
-                        },
-                        ...this.toFlatList(item.children, prefix + '--')
-                    ];
-                }, []);
-            },
-
             addItem() {
                 this.formTitle = 'New category';
                 this.resetForm();

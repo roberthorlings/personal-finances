@@ -26,19 +26,7 @@
                             </v-card-title>
 
                             <v-card-text>
-                                <v-container>
-                                    <v-row>
-                                        <v-col cols="12" md="12" lg="6">
-                                            <DatePickerInput v-model="editedItem.date" label="Date"></DatePickerInput>
-                                        </v-col>
-                                        <v-col cols="12" md="12" lg="6">
-                                            <v-text-field v-model="editedItem.description" label="Description"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12" md="12" lg="6">
-                                            <v-text-field v-model="editedItem.account_id" label="Account"></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-container>
+                                <TransactionForm v-model="editedItem"></TransactionForm>
                             </v-card-text>
 
                             <v-card-actions>
@@ -65,6 +53,9 @@
                     delete
                 </v-icon>
             </template>
+            <template v-slot:item.amount="{ item }">
+                <v-chip :color="item.amount < 0 ? 'red' : ' green'" dark>{{ item.amount | toCurrency }}</v-chip>
+            </template>
             <template v-slot:no-data>
                 No tranasctions yet.
             </template>
@@ -73,7 +64,7 @@
             v-model="error"
             :timeout="4000"
         >
-            An error occurred while loading the accounts.
+            An error occurred while loading the transactions.
             <v-btn
                 color="pink"
                 text
@@ -87,9 +78,11 @@
 
 <script>
 import TransactionsApi from '../apis/transactionsApi';
+import TransactionForm from "./TransactionForm";
 export default {
   name: 'Transactions',
-  data: () => ({
+    components: {TransactionForm},
+    data: () => ({
     dialog: false,
     error: false,
     loading: true,
@@ -98,12 +91,13 @@ export default {
         { text: 'Account', value: 'account.name' },
         { text: 'Description', value: 'description' },
         { text: 'Category', value: 'category.name' },
+        { text: 'Amount', value: 'amount', align: 'end' },
         { text: 'Actions', value: 'action', sortable: false },
     ],
     items: [],
     totalItems: 0,
     options: {},
-    editedItem: {}
+    editedItem: {},
 }),
 
 computed: {
@@ -134,7 +128,7 @@ methods: {
         this.editedItem = {
             date: new Date().toISOString().substr(0, 10),
             description: '',
-            account_id: ''
+            account: {}
         }
     },
     isEditing() {

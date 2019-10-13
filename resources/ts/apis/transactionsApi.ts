@@ -1,3 +1,4 @@
+import axios from 'axios';
 import genericApi, {Identifyable} from "./genericApi";
 import {Category} from "./categoriesApi";
 
@@ -18,4 +19,19 @@ export interface Transaction extends Identifyable {
     created_at: Date,
     updated_at: Date
 }
-export default genericApi<Transaction>(API_ENDPOINT);
+
+const importTransactions = (type: string, file: File) => {
+    var formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", type);
+
+    return axios.post(API_ENDPOINT + '/import', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+}
+export default {
+    ...genericApi<Transaction>(API_ENDPOINT),
+    importTransactions
+};

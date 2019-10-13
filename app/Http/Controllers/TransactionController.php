@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Model\Category;
+use App\Model\Import\ImporterFactory;
 use App\Model\Transaction;
 use App\Resources\Transaction as TransactionResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
 {
@@ -36,6 +38,23 @@ class TransactionController extends Controller
         $transaction = Transaction::create($request->all());
 
         return new TransactionResource($transaction);
+    }
+
+    public function import(Request $request)
+    {
+        $type = $request->get("type");
+        $file = $request->file("file");
+
+        $importer = ImporterFactory::build($type);
+
+        if(!$importer) {
+            Log::warn("No importer found for type " . $type);
+            return response()->json(null, 400);
+        }
+
+        $importer->import($file);
+
+        return response()->json(null, 204);
     }
 
     /**

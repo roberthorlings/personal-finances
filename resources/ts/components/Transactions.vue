@@ -16,6 +16,9 @@
                     <v-btn text icon color="primary" @click="getDataFromApi">
                         <v-icon>mdi-cached</v-icon>
                     </v-btn>
+
+                    <ImportTransactions></ImportTransactions>
+
                     <v-dialog v-model="dialog" max-width="500px">
                         <template v-slot:activator="{ on }">
                             <v-btn color="primary" dark class="mb-2" v-on="on">New transaction</v-btn>
@@ -79,9 +82,10 @@
 <script>
 import TransactionsApi from '../apis/transactionsApi';
 import TransactionForm from "./TransactionForm";
+import ImportTransactions from "./ImportTransactions";
 export default {
   name: 'Transactions',
-    components: {TransactionForm},
+    components: {ImportTransactions, TransactionForm},
     data: () => ({
     dialog: false,
     error: false,

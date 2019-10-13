@@ -17,6 +17,7 @@ class Category extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'key' => $this->key,
             'parent_id' => $this->parent_id,
             'nestedset' => [
                 'left' => $this->_lft,

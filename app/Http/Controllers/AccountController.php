@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\Statistics\AccountStatsGenerator;
 use Illuminate\Http\Request;
 use App\Model\Account;
 use App\Resources\Account as AccountResource;
@@ -69,5 +70,19 @@ class AccountController extends Controller
     {
         $account->delete();
         return response()->json(null, 204);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function stats()
+    {
+        $generator = new AccountStatsGenerator();
+        $stats = $generator->run();
+
+        return response()->json(["numStats" => count($stats)], 204);
     }
 }

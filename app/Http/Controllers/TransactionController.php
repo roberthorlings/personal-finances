@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Category;
 use App\Model\Import\TransactionFileParserFactory;
+use App\Model\Statistics\AccountStatsGenerator;
 use App\Model\Transaction;
 use App\Resources\Transaction as TransactionResource;
 use Illuminate\Http\Request;
@@ -61,6 +62,20 @@ class TransactionController extends Controller
         }
 
         return response()->json(["transactionCount" => count($transactions)], 201);
+    }
+
+    /**
+     * Recompute summary statistics
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function stats()
+    {
+        $generator = new AccountStatsGenerator();
+        $stats = $generator->run();
+
+        return response()->json(["numStats" => count($stats)], 204);
     }
 
     /**

@@ -34,8 +34,12 @@ const importTransactions = (type: string, file: File, dryRun: boolean) => {
             'Content-Type': 'multipart/form-data'
         }
     })
-}
+};
+
+const computeSummaryStatistics = () => axios.post(API_ENDPOINT + '/stats');
+
 export default {
     ...genericApi<Transaction>(API_ENDPOINT),
-    importTransactions
+    importTransactions,
+    computeSummaryStatistics
 };

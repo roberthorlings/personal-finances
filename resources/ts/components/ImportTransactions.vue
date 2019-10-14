@@ -1,7 +1,9 @@
 <template>
     <v-dialog v-model="dialog" max-width="500px">
         <template v-slot:activator="{ on }">
-            <v-btn color="primary" dark class="mb-2" v-on="on">Import transactions</v-btn>
+            <v-btn color="primary" text icon v-on="on">
+                <v-icon>mdi-import</v-icon>
+            </v-btn>
         </template>
         <v-card>
             <v-card-title>

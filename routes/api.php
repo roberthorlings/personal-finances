@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/categories/tree', 'CategoryController@tree');
 Route::post('/transactions/import', 'TransactionController@import');
+Route::post('/transactions/stats', 'TransactionController@stats');
+Route::post('/accounts/stats', 'AccountsController@stats');
 Route::apiResource('categories', 'CategoryController');
 Route::apiResource('accounts', 'AccountController');
 Route::apiResource('transactions', 'TransactionController');

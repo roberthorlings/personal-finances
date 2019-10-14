@@ -2141,6 +2141,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2173,6 +2176,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     resetForm: function resetForm() {
       this.editedItem = {
         name: '',
+        key: '',
         parent_id: undefined
       };
     },
@@ -2220,6 +2224,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     save: function save() {
       var _this3 = this;
 
+      console.log(this.editedItem);
       _apis_categoriesApi__WEBPACK_IMPORTED_MODULE_0__["default"].store(this.editedItem).then(function () {
         return _this3.getDataFromApi();
       });
@@ -2369,6 +2374,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'ImportTransactions',
@@ -2376,7 +2384,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       dialog: false,
       type: 'firefly',
-      selectedFile: null
+      selectedFile: null,
+      dryRun: false
     };
   },
   methods: {
@@ -2384,7 +2393,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(e);
     },
     importTransactions: function importTransactions() {
-      _apis_transactionsApi__WEBPACK_IMPORTED_MODULE_0__["default"].importTransactions(this.type, this.selectedFile);
+      _apis_transactionsApi__WEBPACK_IMPORTED_MODULE_0__["default"].importTransactions(this.type, this.selectedFile, this.dryRun);
       this.dialog = false;
     },
     close: function close() {
@@ -6335,6 +6344,24 @@ var render = function() {
                                 "v-col",
                                 { attrs: { cols: "12", md: "12", lg: "6" } },
                                 [
+                                  _c("v-text-field", {
+                                    attrs: { label: "Category key" },
+                                    model: {
+                                      value: _vm.editedItem.key,
+                                      callback: function($$v) {
+                                        _vm.$set(_vm.editedItem, "key", $$v)
+                                      },
+                                      expression: "editedItem.key"
+                                    }
+                                  })
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "v-col",
+                                { attrs: { cols: "12", md: "12", lg: "6" } },
+                                [
                                   _c("v-autocomplete", {
                                     attrs: {
                                       items: _vm.autoCompleteItems,
@@ -6794,6 +6821,24 @@ var render = function() {
                                 _vm.type = $$v
                               },
                               expression: "type"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", md: "12" } },
+                        [
+                          _c("v-switch", {
+                            attrs: { label: "Dry run" },
+                            model: {
+                              value: _vm.dryRun,
+                              callback: function($$v) {
+                                _vm.dryRun = $$v
+                              },
+                              expression: "dryRun"
                             }
                           })
                         ],
@@ -7488,7 +7533,7 @@ var render = function() {
           {
             key: "no-data",
             fn: function() {
-              return [_vm._v("\n            No tranasctions yet.\n        ")]
+              return [_vm._v("\n            No transactions yet.\n        ")]
             },
             proxy: true
           }
@@ -58874,10 +58919,13 @@ var __assign = (undefined && undefined.__assign) || function () {
 
 
 var API_ENDPOINT = '/api/transactions';
-var importTransactions = function (type, file) {
+var importTransactions = function (type, file, dryRun) {
     var formData = new FormData();
     formData.append("file", file);
     formData.append("type", type);
+    if (dryRun) {
+        formData.append("dryRun", 'true');
+    }
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.post(API_ENDPOINT + '/import', formData, {
         headers: {
             'Content-Type': 'multipart/form-data'
@@ -59441,6 +59489,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vuetify/lib/components/VGrid */ "./node_modules/vuetify/lib/components/VGrid/index.js");
 /* harmony import */ var vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vuetify/lib/components/VDialog */ "./node_modules/vuetify/lib/components/VDialog/index.js");
 /* harmony import */ var vuetify_lib_components_VFileInput__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuetify/lib/components/VFileInput */ "./node_modules/vuetify/lib/components/VFileInput/index.js");
+/* harmony import */ var vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vuetify/lib/components/VSwitch */ "./node_modules/vuetify/lib/components/VSwitch/index.js");
 
 
 
@@ -59472,7 +59521,8 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 
 
-_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VAutocomplete: vuetify_lib_components_VAutocomplete__WEBPACK_IMPORTED_MODULE_4__["VAutocomplete"],VBtn: vuetify_lib_components_VBtn__WEBPACK_IMPORTED_MODULE_5__["VBtn"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCard"],VCardActions: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardActions"],VCardText: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardText"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardTitle"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDialog: vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_8__["VDialog"],VFileInput: vuetify_lib_components_VFileInput__WEBPACK_IMPORTED_MODULE_9__["VFileInput"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"]})
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VAutocomplete: vuetify_lib_components_VAutocomplete__WEBPACK_IMPORTED_MODULE_4__["VAutocomplete"],VBtn: vuetify_lib_components_VBtn__WEBPACK_IMPORTED_MODULE_5__["VBtn"],VCard: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCard"],VCardActions: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardActions"],VCardText: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardText"],VCardTitle: vuetify_lib_components_VCard__WEBPACK_IMPORTED_MODULE_6__["VCardTitle"],VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VContainer"],VDialog: vuetify_lib_components_VDialog__WEBPACK_IMPORTED_MODULE_8__["VDialog"],VFileInput: vuetify_lib_components_VFileInput__WEBPACK_IMPORTED_MODULE_9__["VFileInput"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_7__["VRow"],VSwitch: vuetify_lib_components_VSwitch__WEBPACK_IMPORTED_MODULE_10__["VSwitch"]})
 
 
 /* hot reload */

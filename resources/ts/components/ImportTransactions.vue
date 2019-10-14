@@ -21,6 +21,9 @@
                                 label="Import type"
                             ></v-autocomplete>
                         </v-col>
+                        <v-col cols="12" md="12">
+                            <v-switch v-model="dryRun" label="Dry run"></v-switch>
+                        </v-col>
                     </v-row>
                 </v-container>
             </v-card-text>
@@ -43,14 +46,15 @@
         data: () => ({
             dialog: false,
             type: 'firefly',
-            selectedFile: null
+            selectedFile: null,
+            dryRun: false
         }),
         methods: {
             handleFileSelect() {
                 console.log(e)
             },
             importTransactions() {
-                TransactionsApi.importTransactions(this.type, this.selectedFile);
+                TransactionsApi.importTransactions(this.type, this.selectedFile, this.dryRun);
                 this.dialog = false;
             },
             close() {

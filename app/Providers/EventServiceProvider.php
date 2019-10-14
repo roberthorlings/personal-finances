@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Model\Category;
 use App\Model\RuleEngine;
 use App\Model\Transaction;
 use Illuminate\Auth\Events\Registered;
@@ -37,6 +38,16 @@ class EventServiceProvider extends ServiceProvider
         $this->ruleEngine = new RuleEngine();
         $this->ruleEngine->init();
 
+        // Apply rule engine when creating a transaction
         Transaction::creating([$this->ruleEngine, 'applyRules']);
+
+        // Make sure the category key is being set when not provided
+        Category::creating(function($category) {
+            if(!$category->key) {
+                $category->key = strtolower($category->name);
+            }
+            return true;
+        });
+
     }
 }

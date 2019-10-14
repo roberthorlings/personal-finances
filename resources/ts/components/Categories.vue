@@ -26,6 +26,9 @@
                                     <v-text-field v-model="editedItem.name" label="Category name"></v-text-field>
                                 </v-col>
                                 <v-col cols="12" md="12" lg="6">
+                                    <v-text-field v-model="editedItem.key" label="Category key"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="12" lg="6">
                                     <v-autocomplete
                                         v-model="editedItem.parent_id"
                                         :items="autoCompleteItems"
@@ -124,6 +127,7 @@
             resetForm () {
                 this.editedItem = {
                     name: '',
+                    key: '',
                     parent_id: undefined
                 }
             },
@@ -168,6 +172,7 @@
             },
 
             save () {
+                console.log(this.editedItem);
                 CategoriesApi.store(this.editedItem).then(() => this.getDataFromApi());
                 this.close();
             },

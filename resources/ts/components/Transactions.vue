@@ -60,7 +60,7 @@
                 <v-chip :color="item.amount < 0 ? 'red' : ' green'" dark>{{ item.amount | toCurrency }}</v-chip>
             </template>
             <template v-slot:no-data>
-                No tranasctions yet.
+                No transactions yet.
             </template>
         </v-data-table>
         <v-snackbar

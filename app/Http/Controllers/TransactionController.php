@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Category;
-use App\Model\Import\ImporterFactory;
+use App\Model\Import\TransactionFileParserFactory;
 use App\Model\Transaction;
 use App\Resources\Transaction as TransactionResource;
 use Illuminate\Http\Request;
@@ -45,16 +45,22 @@ class TransactionController extends Controller
         $type = $request->get("type");
         $file = $request->file("file");
 
-        $importer = ImporterFactory::build($type);
+        $importer = TransactionFileParserFactory::build($type);
 
         if(!$importer) {
-            Log::warn("No importer found for type " . $type);
+            Log::warning("No importer found for type " . $type);
             return response()->json(null, 400);
         }
 
-        $importer->import($file);
+        $transactions = $importer->parse($file);
 
-        return response()->json(null, 204);
+        if(!$request->get("dryRun")) {
+            // Start importing
+            Transaction::insert($transactions);
+            Log::info("Imported " . count($transactions) . " into the database");
+        }
+
+        return response()->json(["transactionCount" => count($transactions)], 201);
     }
 
     /**

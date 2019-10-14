@@ -19,7 +19,6 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
-        $request->file('abc')
         return CategoryResource::collection(
             $this->getPaginatedAndSorted($request, Category::query())
         );

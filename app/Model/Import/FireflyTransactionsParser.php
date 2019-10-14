@@ -10,7 +10,7 @@ use LimitIterator;
 use SplFileObject;
 use Symfony\Component\HttpFoundation\File\File;
 
-class FireflyImporter implements Importer {
+class FireflyTransactionsParser implements TransactionFileParser {
     const SKIP_HEADER_LINES = 1;
     const COLUMN_AMOUNT = 0;
     const COLUMN_ACCOUNT_IBAN = 2;
@@ -22,22 +22,24 @@ class FireflyImporter implements Importer {
     const COLUMN_OPPOSING_ACCOUNT_NAME = 23;
     const COLUMN_TRANSACTION_TYPE = 28;
     const TRANSACTION_TYPE_TRANSFER = 'Transfer';
+    const MAX_DESCRIPTION_LENGTH = 2000;
 
     private $categoriesByKey;
     private $accountsByIban;
 
     public function init() {
-        $this->categoriesByKey = Category::get()->keyBy('key');
+        $this->categoriesByKey = Category::get()->keyBy(function($category) { return strtolower($category['key']); });
         $this->accountsByIban = Account::get()->keyBy('iban');
     }
 
-    public function import(File $file) {
+    public function parse(File $file): array {
         if($this->categoriesByKey == null || $this->accountsByIban == null) {
-            throw new Exception("Cannot import with uninitialized importer. Call init() first");
+            throw new \Exception("Cannot import with uninitialized importer. Call init() first");
         }
 
         Log::info("Start importing", ["filename" => $file->getFilename(), "time" => new DateTime()]);
         $transactions = [];
+        $numRows = 0;
 
         // Read file as CSV file
         $splFile = $file->openFile();
@@ -51,6 +53,9 @@ class FireflyImporter implements Importer {
                 Log::debug("Skipping line #" . $idx . " as it contains only " . count($row) . " fields", $row);
                 continue;
             }
+
+            $numRows++;
+
             $account = $this->getAccount($row[self::COLUMN_ACCOUNT_IBAN]);
 
             if(!$account) {
@@ -58,12 +63,25 @@ class FireflyImporter implements Importer {
                 continue;
             }
 
-            $category = $this->getCategory($row[self::COLUMN_CATEGORY]);
-            $categoryId = $category ? $category->id : null;
+            $providedCategory = trim($row[self::COLUMN_CATEGORY]);
+            $categoryId = null;
 
-            if(!$category) {
-                Log::warning("Importing row #" . $idx . " without category - category " . $row[self::COLUMN_CATEGORY] . " is unknown", $row);
+            if($providedCategory) {
+                $category = $this->getCategory($row[self::COLUMN_CATEGORY]);
+
+                if ($category) {
+                    $categoryId = $category->id;
+                } else {
+                    Log::warning("Importing row #" . $idx . " without category - category " . $row[self::COLUMN_CATEGORY] . " is unknown", $row);
+                }
             }
+
+            $description = $row[self::COLUMN_DESCRIPTION];
+            if(strlen($description) > self::MAX_DESCRIPTION_LENGTH) {
+                Log::warning("Truncating description for line #" . $idx . " to 255 characters", $row);
+                $description = substr($description, 0, self::MAX_DESCRIPTION_LENGTH);
+            }
+
 
             $date = $this->parseDate($row[self::COLUMN_DATE]);
 
@@ -72,7 +90,7 @@ class FireflyImporter implements Importer {
                 "account_id" => $account->id,
                 "category_id" => $categoryId,
                 "date" => $date,
-                "description" => $row[self::COLUMN_DESCRIPTION],
+                "description" => $description,
                 "opposing_account_iban" => $row[self::COLUMN_OPPOSING_ACCOUNT_IBAN],
                 "opposing_account_name" => $row[self::COLUMN_OPPOSING_ACCOUNT_NAME],
             ];
@@ -91,12 +109,16 @@ class FireflyImporter implements Importer {
                     "account_id" => $opposingAccount->id,
                     "category_id" => $categoryId,
                     "date" => $date,
-                    "description" => $row[self::COLUMN_DESCRIPTION],
+                    "description" => $description,
                     "opposing_account_iban" => $row[self::COLUMN_ACCOUNT_IBAN],
                     "opposing_account_name" => $row[self::COLUMN_ACCOUNT_NAME]
                 ];
             }
         }
+
+        Log::info("Recognized " . count($transactions) . " transactions from " . $numRows . " rows of CSV data");
+
+        return $transactions;
     }
 
     private function getAccount(string $iban): ?Account {
@@ -104,7 +126,7 @@ class FireflyImporter implements Importer {
     }
 
     private function getCategory(string $key): ?Category {
-        return $this->categoriesByKey->get($key);
+        return $this->categoriesByKey->get(strtolower($key));
     }
 
     private function parseDate(string $date): DateTime {

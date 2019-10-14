@@ -20,10 +20,14 @@ export interface Transaction extends Identifyable {
     updated_at: Date
 }
 
-const importTransactions = (type: string, file: File) => {
+const importTransactions = (type: string, file: File, dryRun: boolean) => {
     var formData = new FormData();
     formData.append("file", file);
     formData.append("type", type);
+
+    if(dryRun) {
+        formData.append("dryRun", 'true');
+    }
 
     return axios.post(API_ENDPOINT + '/import', formData, {
         headers: {

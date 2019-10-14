@@ -6,6 +6,7 @@ const API_ENDPOINT = '/api/categories';
 export interface Category extends Identifyable {
     name: string,
     parent_id: number,
+    key?: string,
     children?: Category[],
     created_at: Date,
     updated_at: Date

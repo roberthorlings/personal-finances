@@ -10,9 +10,14 @@
             <v-btn text icon color="primary" @click="getDataFromApi">
                 <v-icon>mdi-cached</v-icon>
             </v-btn>
+            <v-btn color="primary" text icon @click="computeSummaryStats">
+                <v-icon>mdi-sigma</v-icon>
+            </v-btn>
             <v-dialog v-model="dialog" max-width="500px">
                 <template v-slot:activator="{ on }">
-                    <v-btn color="primary" dark class="mb-2" v-on="on">New category</v-btn>
+                    <v-btn color="primary" text icon v-on="on">
+                        <v-icon>mdi-plus</v-icon>
+                    </v-btn>
                 </template>
                 <v-card>
                     <v-card-title>
@@ -95,6 +100,7 @@
 <script>
     import CategoriesApi from '../apis/categoriesApi';
     import {toFlatList} from "../utils";
+
     export default {
         name: 'Categories',
         data: () => ({
@@ -142,6 +148,13 @@
                     .catch(e => {
                         this.loading = false;
                         this.error = true;
+                    });
+            },
+            computeSummaryStats() {
+                this.loading = true;
+                return CategoriesApi.stats()
+                    .finally(() => {
+                        this.loading = false;
                     });
             },
             addItem() {

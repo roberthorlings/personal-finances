@@ -2,17 +2,11 @@
 
 namespace App\Model\Statistics;
 
-use App\Model\Account;
-use App\Model\AccountStats;
-use App\Model\Category;
+use App\Model\CategoryStats;
 use App\Model\Transaction;
-use DateTime;
 use Illuminate\Support\Facades\Log;
-use LimitIterator;
-use SplFileObject;
-use Symfony\Component\HttpFoundation\File\File;
 
-class AccountStatsGenerator {
+class CategoryStatsGenerator {
     public function run() {
         $this->clear();
 
@@ -24,14 +18,14 @@ class AccountStatsGenerator {
     }
 
     public function generate() {
-        Log::info("Generating summary statistics for accounts");
+        Log::info("Generating summary statistics for categories");
 
         // List all transactions. Note the 'getQuery()' call here. It retrieves the
         // query itself, which enables us to get the results as stdClass objects, instead of
         // actual Account objects. This is much more performant (more than 40% better) and
         // is fine for these purposes
         $transactions = Transaction::query()
-            ->orderBy('account_id', 'asc')
+            ->orderBy('category_id', 'asc')
             ->orderBy('date', 'asc')
             ->getQuery()
             ->get();
@@ -40,7 +34,7 @@ class AccountStatsGenerator {
 
         // Group transaction by account, year and month
         $grouped = $transactions->groupBy([
-            'account_id',
+            'category_id',
             function($transaction) { return intval(substr($transaction->date, 0, 4)); },
             function($transaction) { return intval(substr($transaction->date, 5, 2)); },
         ]);
@@ -48,33 +42,31 @@ class AccountStatsGenerator {
         // Compute total for each month
         $stats = [];
 
-        foreach($grouped as $account_id => $perAccount) {
-            $balance = 0;
-
-            foreach($perAccount as $year => $perYear) {
+        foreach($grouped as $category_id => $perCategory) {
+            $count = 0;
+            foreach($perCategory as $year => $perYear) {
                 foreach($perYear as $month => $perMonth) {
-                    $balance += $perMonth->sum('amount');
                     $stats[] = [
-                        'account_id' => $account_id,
+                        'category_id' => $category_id ? $category_id : null,
                         'year' => $year,
                         'month' => $month,
-                        'balance' => $balance
+                        'amount' => $perMonth->sum('amount')
                     ];
+                    $count++;
                 }
             }
 
-            Log::debug("Current balance for account #" . $account_id . " is " . $balance . ". Updating accounts table");
-            Account::where('id', $account_id)->update(['balance' => $balance]);
+            Log::debug("Stored " . $count . " stats for category #" . $category_id);
         }
 
         return $stats;
     }
 
     public function store(array $stats) {
-        return AccountStats::insert($stats);
+        return CategoryStats::insert($stats);
     }
 
     public function clear() {
-        AccountStats::truncate();
+        CategoryStats::truncate();
     }
 }

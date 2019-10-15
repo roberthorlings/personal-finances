@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Account;
+use App\Model\Statistics\CategoryStatsGenerator;
 use Illuminate\Http\Request;
 use App\Model\Category;
 use App\Resources\Category as CategoryResource;
@@ -81,5 +82,18 @@ class CategoryController extends Controller
     {
         $category->delete();
         return response()->json(null, 204);
+    }
+
+    /**
+     * Generates summary statistics for categories
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function stats()
+    {
+        $generator = new CategoryStatsGenerator();
+        $stats = $generator->run();
+
+        return response()->json(["numStats" => count($stats)], 201);
     }
 }

@@ -160,7 +160,7 @@ methods: {
     },
     computeSummaryStats() {
         this.loading = true;
-        return TransactionsApi.computeSummaryStatistics()
+        return TransactionsApi.stats()
             .finally(() => {
                 this.loading = false;
             });

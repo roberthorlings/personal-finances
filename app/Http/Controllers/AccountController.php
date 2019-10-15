@@ -73,9 +73,8 @@ class AccountController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Generates summary statistics for accounts
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function stats()
@@ -83,6 +82,6 @@ class AccountController extends Controller
         $generator = new AccountStatsGenerator();
         $stats = $generator->run();
 
-        return response()->json(["numStats" => count($stats)], 204);
+        return response()->json(["numStats" => count($stats)], 201);
     }
 }

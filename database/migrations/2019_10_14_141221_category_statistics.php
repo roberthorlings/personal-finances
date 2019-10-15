@@ -15,7 +15,7 @@ class CategoryStatistics extends Migration
     {
         Schema::create('category_stats', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('category_id')->unsigned();
+            $table->bigInteger('category_id')->unsigned()->nullable();
 
             $table->integer('month');
             $table->integer('year');

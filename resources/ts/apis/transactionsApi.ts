@@ -1,6 +1,7 @@
 import axios from 'axios';
 import genericApi, {Identifyable} from "./genericApi";
 import {Category} from "./categoriesApi";
+import genericWithStatsApi from "./genericWithStatsApi";
 
 const API_ENDPOINT = '/api/transactions';
 
@@ -36,10 +37,7 @@ const importTransactions = (type: string, file: File, dryRun: boolean) => {
     })
 };
 
-const computeSummaryStatistics = () => axios.post(API_ENDPOINT + '/stats');
-
 export default {
-    ...genericApi<Transaction>(API_ENDPOINT),
-    importTransactions,
-    computeSummaryStatistics
+    ...genericWithStatsApi<Transaction>(API_ENDPOINT),
+    importTransactions
 };

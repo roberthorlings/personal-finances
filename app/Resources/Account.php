@@ -18,6 +18,7 @@ class Account extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'iban' => $this->iban,
+            'balance' => floatval($this->balance),
             'created_at' => (string) $this->created_at,
             'updated_at' => (string) $this->updated_at
         ];

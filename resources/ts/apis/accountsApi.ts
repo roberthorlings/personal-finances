@@ -1,4 +1,5 @@
-import genericApi, {Identifyable} from "./genericApi";
+import {Identifyable} from "./genericApi";
+import genericWithStatsApi from "./genericWithStatsApi";
 
 const API_ENDPOINT = '/api/accounts';
 
@@ -9,4 +10,4 @@ export interface Account extends Identifyable {
     updated_at: Date
 }
 
-export default genericApi<Account>(API_ENDPOINT);
+export default genericWithStatsApi<Account>(API_ENDPOINT);

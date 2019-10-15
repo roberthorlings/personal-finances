@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Category;
 use App\Model\Import\TransactionFileParserFactory;
 use App\Model\Statistics\AccountStatsGenerator;
+use App\Model\Statistics\CategoryStatsGenerator;
 use App\Model\Transaction;
 use App\Resources\Transaction as TransactionResource;
 use Illuminate\Http\Request;
@@ -73,9 +74,15 @@ class TransactionController extends Controller
     public function stats()
     {
         $generator = new AccountStatsGenerator();
-        $stats = $generator->run();
+        $accountStats = $generator->run();
 
-        return response()->json(["numStats" => count($stats)], 204);
+        $generator = new CategoryStatsGenerator();
+        $categoryStats = $generator->run();
+
+        return response()->json([
+            "numAccountStats" => count($accountStats),
+            "numCategoryStats" => count($categoryStats)
+        ], 201);
     }
 
     /**

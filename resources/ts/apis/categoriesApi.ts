@@ -1,5 +1,6 @@
-import genericApi, {Identifyable, ListOptions, ListResult} from "./genericApi";
+import {Identifyable} from "./genericApi";
 import axios from "axios";
+import genericWithStatsApi from "./genericWithStatsApi";
 
 const API_ENDPOINT = '/api/categories';
 
@@ -17,6 +18,6 @@ const tree = (): Promise<Category[]> =>
         .then(response => response.data.data);
 
 export default {
-    ...genericApi<Category>(API_ENDPOINT),
+    ...genericWithStatsApi<Category>(API_ENDPOINT),
     tree
 };

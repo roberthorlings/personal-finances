@@ -23,6 +23,7 @@ class FireflyTransactionsParser implements TransactionFileParser {
     const COLUMN_TRANSACTION_TYPE = 28;
     const TRANSACTION_TYPE_TRANSFER = 'Transfer';
     const MAX_DESCRIPTION_LENGTH = 2000;
+    const CATEGORY_KEY_TRANSFERS = 'overboekingen';
 
     private $categoriesByKey;
     private $accountsByIban;
@@ -36,6 +37,8 @@ class FireflyTransactionsParser implements TransactionFileParser {
         if($this->categoriesByKey == null || $this->accountsByIban == null) {
             throw new \Exception("Cannot import with uninitialized importer. Call init() first");
         }
+
+        $transferCategory = $this->categoriesByKey[self::CATEGORY_KEY_TRANSFERS];
 
         Log::info("Start importing", ["filename" => $file->getFilename(), "time" => new DateTime()]);
         $transactions = [];
@@ -74,6 +77,9 @@ class FireflyTransactionsParser implements TransactionFileParser {
                 } else {
                     Log::warning("Importing row #" . $idx . " without category - category " . $row[self::COLUMN_CATEGORY] . " is unknown", $row);
                 }
+            } elseif($this->isTransfer($row) ) {
+                // A transfer without category is added to the transfer category
+                $categoryId = $transferCategory->id;
             }
 
             $description = $row[self::COLUMN_DESCRIPTION];
@@ -81,7 +87,6 @@ class FireflyTransactionsParser implements TransactionFileParser {
                 Log::warning("Truncating description for line #" . $idx . " to 255 characters", $row);
                 $description = substr($description, 0, self::MAX_DESCRIPTION_LENGTH);
             }
-
 
             $date = $this->parseDate($row[self::COLUMN_DATE]);
 
@@ -95,7 +100,7 @@ class FireflyTransactionsParser implements TransactionFileParser {
                 "opposing_account_name" => $row[self::COLUMN_OPPOSING_ACCOUNT_NAME],
             ];
 
-            if($row[self::COLUMN_TRANSACTION_TYPE] == self::TRANSACTION_TYPE_TRANSFER) {
+            if($this->isTransfer($row)) {
                 $opposingAccount = $this->getAccount($row[self::COLUMN_OPPOSING_ACCOUNT_IBAN]);
 
                 if(!$opposingAccount) {
@@ -131,6 +136,10 @@ class FireflyTransactionsParser implements TransactionFileParser {
 
     private function parseDate(string $date): DateTime {
         return DateTime::createFromFormat("Ymd", $date);
+    }
+
+    private function isTransfer($row): bool {
+        return $row[self::COLUMN_TRANSACTION_TYPE] == self::TRANSACTION_TYPE_TRANSFER;
     }
 
 }

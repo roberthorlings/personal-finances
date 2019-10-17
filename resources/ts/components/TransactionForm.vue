@@ -49,29 +49,9 @@
 </template>
 
 <script>
-    import AccountsApi from '../apis/accountsApi';
-
     export default {
   name: 'TransactionForm',
-  data: () => ({
-    accounts: []
-  }),
-
-  mounted () {
-    this.getAccounts();
-  },
-
   methods: {
-    getAccounts () {
-        this.accountsError = false;
-        return AccountsApi.list()
-            .then(data => {
-                this.accounts = data.items;
-            })
-            .catch(e => {
-                this.$emit('error', {type: 'accounts', message: e.message});
-            });
-    },
     update(key, value) {
         this.$emit('input', { ...this.value, [key]: value })
     },
@@ -79,7 +59,8 @@
 
   props: {
       value: Object,
-      categories: Array
+      categories: Array,
+      accounts: Array
   }
 }
 </script>

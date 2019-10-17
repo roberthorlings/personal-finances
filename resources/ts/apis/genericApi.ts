@@ -4,7 +4,8 @@ export interface ListOptions {
     sortBy: string[],
     sortDesc: boolean[],
     page: number,
-    itemsPerPage: number
+    itemsPerPage: number,
+    filters?: object
 }
 
 export interface ListResult<T> {
@@ -30,6 +31,7 @@ export default <T extends Identifyable>(endpoint: string) => {
             endpoint,
             {
                 params: {
+                    ...(options.filters ? options.filters : {}),
                     sortBy: options.sortBy[0],
                     sortOrder: options.sortDesc[0] ? 'desc' : 'asc',
                     page: options.page || 1,

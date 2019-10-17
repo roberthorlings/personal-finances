@@ -26,6 +26,29 @@ class TransactionController extends Controller
             ->leftJoin('categories as category', 'transactions.category_id', '=', 'category.id')
             ->leftJoin('accounts as account', 'transactions.account_id', '=', 'account.id');
 
+        if($request->has("category_id")) {
+            $category_id = $request->get("category_id");
+
+            if($category_id == 0) {
+                // If 0 is given as category id, it means a request for all uncategorized transactions
+                $queryBuilder->whereNull("category_id");
+            } else {
+                // Otherwise, we need to return the transactions within the category or any of its descendants
+                $categories = Category::descendantsOf($category_id)->pluck('id');
+
+                // Include the id of category itself
+                $categories[] = $category_id;
+
+                // Filter on those categories
+                $queryBuilder->whereIn("category_id", $categories);
+            }
+        }
+
+        if($request->has("account_id")) {
+            $account_id = $request->get("account_id");
+            $queryBuilder->where("account_id", "=", $account_id);
+        }
+
         return TransactionResource::collection($this->getPaginatedAndSorted($request, $queryBuilder, ['transactions.*']));
     }
 

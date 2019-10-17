@@ -2843,6 +2843,8 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
 
 
 
@@ -2975,7 +2977,10 @@ var ID_NO_CATEGORY = 0;
   },
   methods: {
     onKeyPress: function onKeyPress(e) {
-      var key = String.fromCharCode(e.keyCode);
+      var key = String.fromCharCode(e.keyCode); // Don't listen to keypresses in input elements
+
+      var inputElements = ['INPUT', 'TEXTAREA', 'SELECT'];
+      if (e.target && inputElements.includes(e.target.nodeName)) return;
 
       if (key.toLowerCase() === 'e') {
         this.categorizeFirst();
@@ -7516,7 +7521,8 @@ var render = function() {
                                         items: _vm.categoryFilters,
                                         "item-value": "id",
                                         "item-text": "text",
-                                        label: "Category"
+                                        label: "Category",
+                                        "auto-select-first": ""
                                       },
                                       model: {
                                         value: _vm.editedFilters.category_id,
@@ -7820,7 +7826,8 @@ var render = function() {
                                   items: _vm.categories,
                                   "item-value": "id",
                                   "item-text": "text",
-                                  label: "Category"
+                                  label: "Category",
+                                  "auto-select-first": ""
                                 },
                                 model: {
                                   value: props.item.category_id,

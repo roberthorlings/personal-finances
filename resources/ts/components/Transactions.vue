@@ -42,6 +42,7 @@
                                     item-value="id"
                                     item-text="text"
                                     label="Category"
+                                    auto-select-first
                                 ></v-autocomplete>
                                 <v-autocomplete
                                     v-model="editedFilters.account_id"
@@ -126,6 +127,7 @@
                             item-value="id"
                             item-text="text"
                             label="Category"
+                            auto-select-first
                         ></v-autocomplete>
                     </template>
                 </v-edit-dialog>
@@ -266,6 +268,11 @@ mounted () {
 methods: {
     onKeyPress(e) {
         const key = String.fromCharCode(e.keyCode);
+
+        // Don't listen to keypresses in input elements
+        const inputElements = ['INPUT', 'TEXTAREA', 'SELECT']
+        if(e.target && inputElements.includes(e.target.nodeName))
+            return;
 
         if(key.toLowerCase() === 'e') {
             this.categorizeFirst();

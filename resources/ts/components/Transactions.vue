@@ -35,7 +35,11 @@
                             </v-card-title>
 
                             <v-card-text>
-                                <TransactionForm v-model="editedItem"></TransactionForm>
+                                <TransactionForm
+                                    v-model="editedItem"
+                                    :categories="categories"
+                                >
+                                </TransactionForm>
                             </v-card-text>
 
                             <v-card-actions>
@@ -65,6 +69,23 @@
             <template v-slot:item.amount="{ item }">
                 <v-chip :color="item.amount < 0 ? 'red' : ' green'" dark>{{ item.amount | toCurrency }}</v-chip>
             </template>
+            <template v-slot:item.category.name="props">
+                <v-edit-dialog
+                    :return-value.sync="props.item.category_id"
+                    @save="updateCategory(props.item.id, props.item.category_id)"
+                > {{ props.item.category.name }}
+                    <template v-slot:input>
+                        <v-autocomplete
+                            v-model="props.item.category_id"
+                            :items="categories"
+                            item-value="id"
+                            item-text="text"
+                            label="Category"
+                        ></v-autocomplete>
+                    </template>
+                </v-edit-dialog>
+
+            </template>
             <template v-slot:no-data>
                 No transactions yet.
             </template>
@@ -89,6 +110,8 @@
 import TransactionsApi from '../apis/transactionsApi';
 import TransactionForm from "./TransactionForm";
 import ImportTransactions from "./ImportTransactions";
+import CategoriesApi from "../apis/categoriesApi";
+import {toFlatList} from "../utils";
 export default {
   name: 'Transactions',
     components: {ImportTransactions, TransactionForm},
@@ -108,6 +131,7 @@ export default {
     totalItems: 0,
     options: {},
     editedItem: {},
+    categories: []
 }),
 
 computed: {
@@ -130,6 +154,7 @@ watch: {
 
 mounted () {
     this.getDataFromApi();
+    this.getCategories();
     this.resetForm();
 },
 
@@ -156,6 +181,16 @@ methods: {
             .catch(e => {
                 this.loading = false;
                 this.error = true;
+            });
+    },
+    getCategories () {
+        return CategoriesApi.tree()
+            .then(data => {
+                this.categories = toFlatList(data);
+            })
+            .catch(e => {
+                console.log("Error while loading categories");
+                this.$emit('error', {type: 'categories', message: e.message});
             });
     },
     computeSummaryStats() {
@@ -187,6 +222,11 @@ methods: {
     save () {
         TransactionsApi.store(this.editedItem).then(() => this.getDataFromApi());
         this.close();
+    },
+
+    updateCategory(transactionId, categoryId) {
+        TransactionsApi.store({id: transactionId, category_id: categoryId})
+            .then(() => this.getDataFromApi());
     },
   },
 }

@@ -49,19 +49,16 @@
 </template>
 
 <script>
-import AccountsApi from '../apis/accountsApi';
-import CategoriesApi from '../apis/categoriesApi';
-import {toFlatList} from "../utils";
-export default {
+    import AccountsApi from '../apis/accountsApi';
+
+    export default {
   name: 'TransactionForm',
   data: () => ({
-    accounts: [],
-    categories: [],
+    accounts: []
   }),
 
   mounted () {
     this.getAccounts();
-    this.getCategories();
   },
 
   methods: {
@@ -75,21 +72,14 @@ export default {
                 this.$emit('error', {type: 'accounts', message: e.message});
             });
     },
-      getCategories () {
-          this.categoriesError = false;
-          return CategoriesApi.tree()
-              .then(data => {
-                  this.categories = toFlatList(data);
-              })
-              .catch(e => {
-                  this.$emit('error', {type: 'categories', message: e.message});
-              });
-      },
     update(key, value) {
         this.$emit('input', { ...this.value, [key]: value })
     },
   },
 
-  props: { value: Object }
+  props: {
+      value: Object,
+      categories: Array
+  }
 }
 </script>

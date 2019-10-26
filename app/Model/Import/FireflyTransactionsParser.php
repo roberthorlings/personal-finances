@@ -40,7 +40,7 @@ class FireflyTransactionsParser implements TransactionFileParser {
 
         $transferCategory = $this->categoriesByKey[self::CATEGORY_KEY_TRANSFERS];
 
-        Log::info("Start importing", ["filename" => $file->getFilename(), "time" => new DateTime()]);
+        Log::info("Start importing Firefly file", ["filename" => $file->getFilename(), "time" => new DateTime()]);
         $transactions = [];
         $numRows = 0;
 

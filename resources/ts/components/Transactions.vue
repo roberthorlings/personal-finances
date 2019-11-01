@@ -104,8 +104,15 @@
                 No transactions yet.
             </template>
         </v-data-table>
-        <p class="text-right body-2 mt-2">Press 'n' to filter on no category, 'a' to sort on amount, 'e' to categorize
-            the first item in the list</p>
+        <KeyboardShortcuts :shortcuts="keyboardShortcuts">
+            <p class="text-right body-2 mt-2">
+                's, a' sorts on amount, 's, d' sort on date, 's, c' sorts on category name<br />
+                'f, c' filters on no category, 'f, a' shows all<br />
+                'd y' filters on this year, 'd m' filters on this month, 'd a' clears date filter<br />
+                'd, ,' navigates one month back, 'd, .' navigates one month ahead<br />
+                Press 'e' to categorize the first item in the list
+            </p>
+        </KeyboardShortcuts>
         <v-snackbar
             v-model="error"
             :timeout="4000"
@@ -130,10 +137,12 @@
     import CategoriesApi from "../apis/categoriesApi";
     import AccountsApi from '../apis/accountsApi';
     import {toFlatList} from "../utils";
+    import KeyboardShortcuts from "./KeyboardShortcuts";
+    import DateRange from "../DateRange";
 
     export default {
         name: 'Transactions',
-        components: {ImportTransactions, TransactionForm, TransactionFilters},
+        components: {KeyboardShortcuts, ImportTransactions, TransactionForm, TransactionFilters},
         data: () => ({
             dialog: false,
             error: false,
@@ -156,7 +165,9 @@
             },
             categories: [],
             accounts: [],
-            editedItem: {}
+            editedItem: {},
+
+            keyboardShortcuts: []
         }),
 
         computed: {
@@ -188,41 +199,23 @@
             this.getAccounts();
             this.getCategories();
             this.resetForm();
-        },
 
-        created() {
-            window.addEventListener("keypress", this.onKeyPress);
-        },
-
-        destroyed() {
-            window.removeEventListener("keypress", this.onKeyPress);
+            this.keyboardShortcuts = [
+                {sequence: ['e'], callback: this.categorizeFirst},
+                {sequence: ['f', 'c'], callback: this.filterNoCategory},
+                {sequence: ['f', 'a'], callback: this.filterAllCategories},
+                {sequence: ['d', ','], callback: this.filterPreviousMonth},
+                {sequence: ['d', '.'], callback: this.filterNextMonth},
+                {sequence: ['d', 'y'], callback: this.filterThisYear},
+                {sequence: ['d', 'm'], callback: this.filterThisMonth},
+                {sequence: ['d', 'a'], callback: this.filterAllDates},
+                {sequence: ['s', 'a'], callback: () => this.applySort('amount')},
+                {sequence: ['s', 'c'], callback: () => this.applySort('category.name')},
+                {sequence: ['s', 'd'], callback: () => this.applySort('date')},
+            ];
         },
 
         methods: {
-            onKeyPress(e) {
-                const key = String.fromCharCode(e.keyCode);
-
-                // Don't listen to keypresses in input elements
-                const inputElements = ['INPUT', 'TEXTAREA', 'SELECT']
-                if (e.target && inputElements.includes(e.target.nodeName))
-                    return;
-
-                if (key.toLowerCase() === 'e') {
-                    this.categorizeFirst();
-                }
-                if (key.toLowerCase() === 'n') {
-                    this.filters.category_id = ID_NO_CATEGORY;
-                }
-
-                if (key.toLowerCase() === 'a') {
-                    if (this.options.sortBy[0] === 'amount') {
-                        this.options.sortDesc[0] = !this.options.sortDesc[0]
-                    } else {
-                        this.options.sortBy[0] = 'amount';
-                    }
-                    this.getDataFromApi();
-                }
-            },
             resetForm() {
                 this.editedItem = {
                     date: new Date().toISOString().substr(0, 10),
@@ -316,6 +309,50 @@
                     const firstId = this.items[0].id;
                     this.$refs['category-name-' + firstId].click();
                 }
+            },
+
+            filterNoCategory() {
+                this.filters.category_id = ID_NO_CATEGORY;
+            },
+
+            filterAllCategories() {
+                this.filters.category_id = ID_NO_FILTER;
+            },
+
+            filterAllDates() {
+                this.filters.date_range = [];
+            },
+
+            filterThisYear() {
+                this.filters.date_range = DateRange.current.year;
+            },
+            filterThisMonth() {
+                this.filters.date_range = DateRange.current.month;
+            },
+
+            filterPreviousMonth() {
+                if(!this.filters.date_range || this.filters.date_range.length === 0)
+                    return;
+
+                const [y, m] = this.filters.date_range[0].split('-').map(s => parseInt(s, 10));
+                this.filters.date_range = DateRange.previous.month(y, m);
+            },
+
+            filterNextMonth() {
+                if(!this.filters.date_range || this.filters.date_range.length === 0)
+                    return;
+
+                const [y, m] = this.filters.date_range[0].split('-').map(s => parseInt(s, 10));
+                this.filters.date_range = DateRange.next.month(y, m);
+            },
+
+            applySort(column) {
+                if (this.options.sortBy[0] === column) {
+                    this.options.sortDesc[0] = !this.options.sortDesc[0]
+                } else {
+                    this.options.sortBy[0] = column;
+                }
+                this.getDataFromApi();
             },
 
             updateCategory(transactionId, categoryId) {

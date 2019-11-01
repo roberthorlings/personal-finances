@@ -2619,6 +2619,94 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/KeyboardShortcuts.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./resources/ts/components/KeyboardShortcuts.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
+
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: 'KeyboardShortcuts',
+  props: {
+    shortcuts: {
+      type: Array,
+      "default": []
+    }
+  },
+  computed: {
+    bufferSize: function bufferSize() {
+      return Math.max.apply(Math, _toConsumableArray(this.shortcuts.map(function (s) {
+        return s.sequence.length;
+      })));
+    }
+  },
+  data: function data() {
+    return {
+      buffer: []
+    };
+  },
+  watch: {
+    buffer: function buffer() {
+      var _this = this;
+
+      // Try to match the buffer with the
+      this.shortcuts.forEach(function (shortcut) {
+        if (_this.matches(_this.buffer, shortcut.sequence)) {
+          shortcut.callback(_this.buffer);
+          _this.buffer = [];
+        }
+      });
+    }
+  },
+  created: function created() {
+    window.addEventListener("keypress", this.onKeyPress);
+  },
+  destroyed: function destroyed() {
+    window.removeEventListener("keypress", this.onKeyPress);
+  },
+  methods: {
+    onKeyPress: function onKeyPress(e) {
+      var key = String.fromCharCode(e.keyCode); // Don't listen to keypresses in input elements
+
+      var inputElements = ['INPUT', 'TEXTAREA', 'SELECT'];
+      if (e.target && inputElements.includes(e.target.nodeName)) return; // Add the key to the buffer, and make sure the buffer is as small as possible
+
+      this.buffer = [].concat(_toConsumableArray(this.buffer), [key.toLowerCase()]).slice(-this.bufferSize);
+    },
+    matches: function matches(buffer, sequence) {
+      if (buffer.length < sequence.length) return false; // Use the last part of the buffer for matching
+
+      var relevantBuffer = buffer.slice(-sequence.length); // Go over every part in the shortcut. If every part matches
+      // we have a match
+
+      for (var i = 0; i < sequence.length; i++) {
+        // An empty character matches anything
+        if (sequence[i] != '' && relevantBuffer[i] !== sequence[i]) return false;
+      }
+
+      return true;
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/Layout.vue?vue&type=script&lang=js&":
 /*!*************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./resources/ts/components/Layout.vue?vue&type=script&lang=js& ***!
@@ -3008,6 +3096,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _apis_categoriesApi__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../apis/categoriesApi */ "./resources/ts/apis/categoriesApi.ts");
 /* harmony import */ var _apis_accountsApi__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../apis/accountsApi */ "./resources/ts/apis/accountsApi.ts");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../utils */ "./resources/ts/utils.ts");
+/* harmony import */ var _KeyboardShortcuts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./KeyboardShortcuts */ "./resources/ts/components/KeyboardShortcuts.vue");
+/* harmony import */ var _DateRange__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../DateRange */ "./resources/ts/DateRange.ts");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
@@ -3138,6 +3236,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
+
 
 
 
@@ -3148,6 +3255,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Transactions',
   components: {
+    KeyboardShortcuts: _KeyboardShortcuts__WEBPACK_IMPORTED_MODULE_7__["default"],
     ImportTransactions: _ImportTransactions__WEBPACK_IMPORTED_MODULE_2__["default"],
     TransactionForm: _TransactionForm__WEBPACK_IMPORTED_MODULE_1__["default"],
     TransactionFilters: _TransactionFilters__WEBPACK_IMPORTED_MODULE_3__["default"]
@@ -3188,7 +3296,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       },
       categories: [],
       accounts: [],
-      editedItem: {}
+      editedItem: {},
+      keyboardShortcuts: []
     };
   },
   computed: {
@@ -3214,42 +3323,54 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     }
   },
   mounted: function mounted() {
+    var _this = this;
+
     this.getDataFromApi();
     this.getAccounts();
     this.getCategories();
     this.resetForm();
-  },
-  created: function created() {
-    window.addEventListener("keypress", this.onKeyPress);
-  },
-  destroyed: function destroyed() {
-    window.removeEventListener("keypress", this.onKeyPress);
+    this.keyboardShortcuts = [{
+      sequence: ['e'],
+      callback: this.categorizeFirst
+    }, {
+      sequence: ['f', 'c'],
+      callback: this.filterNoCategory
+    }, {
+      sequence: ['f', 'a'],
+      callback: this.filterAllCategories
+    }, {
+      sequence: ['d', ','],
+      callback: this.filterPreviousMonth
+    }, {
+      sequence: ['d', '.'],
+      callback: this.filterNextMonth
+    }, {
+      sequence: ['d', 'y'],
+      callback: this.filterThisYear
+    }, {
+      sequence: ['d', 'm'],
+      callback: this.filterThisMonth
+    }, {
+      sequence: ['d', 'a'],
+      callback: this.filterAllDates
+    }, {
+      sequence: ['s', 'a'],
+      callback: function callback() {
+        return _this.applySort('amount');
+      }
+    }, {
+      sequence: ['s', 'c'],
+      callback: function callback() {
+        return _this.applySort('category.name');
+      }
+    }, {
+      sequence: ['s', 'd'],
+      callback: function callback() {
+        return _this.applySort('date');
+      }
+    }];
   },
   methods: {
-    onKeyPress: function onKeyPress(e) {
-      var key = String.fromCharCode(e.keyCode); // Don't listen to keypresses in input elements
-
-      var inputElements = ['INPUT', 'TEXTAREA', 'SELECT'];
-      if (e.target && inputElements.includes(e.target.nodeName)) return;
-
-      if (key.toLowerCase() === 'e') {
-        this.categorizeFirst();
-      }
-
-      if (key.toLowerCase() === 'n') {
-        this.filters.category_id = _TransactionFilters__WEBPACK_IMPORTED_MODULE_3__["ID_NO_CATEGORY"];
-      }
-
-      if (key.toLowerCase() === 'a') {
-        if (this.options.sortBy[0] === 'amount') {
-          this.options.sortDesc[0] = !this.options.sortDesc[0];
-        } else {
-          this.options.sortBy[0] = 'amount';
-        }
-
-        this.getDataFromApi();
-      }
-    },
     resetForm: function resetForm() {
       this.editedItem = {
         date: new Date().toISOString().substr(0, 10),
@@ -3261,7 +3382,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return this.editedItem.id;
     },
     getDataFromApi: function getDataFromApi() {
-      var _this = this;
+      var _this2 = this;
 
       this.loading = true;
       this.error = false;
@@ -3282,48 +3403,48 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return _apis_transactionsApi__WEBPACK_IMPORTED_MODULE_0__["default"].list(_objectSpread({}, this.options, {
         filters: filters
       })).then(function (data) {
-        _this.loading = false;
-        _this.items = data.items;
-        _this.totalItems = data.total;
+        _this2.loading = false;
+        _this2.items = data.items;
+        _this2.totalItems = data.total;
       })["catch"](function (e) {
-        _this.loading = false;
-        _this.error = true;
+        _this2.loading = false;
+        _this2.error = true;
       });
     },
     getCategories: function getCategories() {
-      var _this2 = this;
+      var _this3 = this;
 
       return _apis_categoriesApi__WEBPACK_IMPORTED_MODULE_4__["default"].tree().then(function (data) {
-        _this2.categories = Object(_utils__WEBPACK_IMPORTED_MODULE_6__["toFlatList"])(data);
+        _this3.categories = Object(_utils__WEBPACK_IMPORTED_MODULE_6__["toFlatList"])(data);
       })["catch"](function (e) {
         console.error("Error while loading categories");
 
-        _this2.$emit('error', {
+        _this3.$emit('error', {
           type: 'categories',
           message: e.message
         });
       });
     },
     getAccounts: function getAccounts() {
-      var _this3 = this;
+      var _this4 = this;
 
       return _apis_accountsApi__WEBPACK_IMPORTED_MODULE_5__["default"].list().then(function (data) {
-        _this3.accounts = data.items;
+        _this4.accounts = data.items;
       })["catch"](function (e) {
         console.error("Error while loading accounts");
 
-        _this3.$emit('error', {
+        _this4.$emit('error', {
           type: 'accounts',
           message: e.message
         });
       });
     },
     computeSummaryStats: function computeSummaryStats() {
-      var _this4 = this;
+      var _this5 = this;
 
       this.loading = true;
       return _apis_transactionsApi__WEBPACK_IMPORTED_MODULE_0__["default"].stats()["finally"](function () {
-        _this4.loading = false;
+        _this5.loading = false;
       });
     },
     addItem: function addItem() {
@@ -3335,10 +3456,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.dialog = true;
     },
     deleteItem: function deleteItem(item) {
-      var _this5 = this;
+      var _this6 = this;
 
       confirm('Are you sure you want to delete this item?') && _apis_transactionsApi__WEBPACK_IMPORTED_MODULE_0__["default"].destroy(item.id).then(function () {
-        return _this5.getDataFromApi();
+        return _this6.getDataFromApi();
       });
     },
     close: function close() {
@@ -3346,10 +3467,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       this.resetForm();
     },
     save: function save() {
-      var _this6 = this;
+      var _this7 = this;
 
       _apis_transactionsApi__WEBPACK_IMPORTED_MODULE_0__["default"].store(this.editedItem).then(function () {
-        return _this6.getDataFromApi();
+        return _this7.getDataFromApi();
       });
       this.close();
     },
@@ -3359,14 +3480,62 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         this.$refs['category-name-' + firstId].click();
       }
     },
+    filterNoCategory: function filterNoCategory() {
+      this.filters.category_id = _TransactionFilters__WEBPACK_IMPORTED_MODULE_3__["ID_NO_CATEGORY"];
+    },
+    filterAllCategories: function filterAllCategories() {
+      this.filters.category_id = _TransactionFilters__WEBPACK_IMPORTED_MODULE_3__["ID_NO_FILTER"];
+    },
+    filterAllDates: function filterAllDates() {
+      this.filters.date_range = [];
+    },
+    filterThisYear: function filterThisYear() {
+      this.filters.date_range = _DateRange__WEBPACK_IMPORTED_MODULE_8__["default"].current.year;
+    },
+    filterThisMonth: function filterThisMonth() {
+      this.filters.date_range = _DateRange__WEBPACK_IMPORTED_MODULE_8__["default"].current.month;
+    },
+    filterPreviousMonth: function filterPreviousMonth() {
+      if (!this.filters.date_range || this.filters.date_range.length === 0) return;
+
+      var _this$filters$date_ra = this.filters.date_range[0].split('-').map(function (s) {
+        return parseInt(s, 10);
+      }),
+          _this$filters$date_ra2 = _slicedToArray(_this$filters$date_ra, 2),
+          y = _this$filters$date_ra2[0],
+          m = _this$filters$date_ra2[1];
+
+      this.filters.date_range = _DateRange__WEBPACK_IMPORTED_MODULE_8__["default"].previous.month(y, m);
+    },
+    filterNextMonth: function filterNextMonth() {
+      if (!this.filters.date_range || this.filters.date_range.length === 0) return;
+
+      var _this$filters$date_ra3 = this.filters.date_range[0].split('-').map(function (s) {
+        return parseInt(s, 10);
+      }),
+          _this$filters$date_ra4 = _slicedToArray(_this$filters$date_ra3, 2),
+          y = _this$filters$date_ra4[0],
+          m = _this$filters$date_ra4[1];
+
+      this.filters.date_range = _DateRange__WEBPACK_IMPORTED_MODULE_8__["default"].next.month(y, m);
+    },
+    applySort: function applySort(column) {
+      if (this.options.sortBy[0] === column) {
+        this.options.sortDesc[0] = !this.options.sortDesc[0];
+      } else {
+        this.options.sortBy[0] = column;
+      }
+
+      this.getDataFromApi();
+    },
     updateCategory: function updateCategory(transactionId, categoryId) {
-      var _this7 = this;
+      var _this8 = this;
 
       _apis_transactionsApi__WEBPACK_IMPORTED_MODULE_0__["default"].store({
         id: transactionId,
         category_id: categoryId
       }).then(function () {
-        return _this7.getDataFromApi();
+        return _this8.getDataFromApi();
       });
     }
   }
@@ -7497,6 +7666,30 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/KeyboardShortcuts.vue?vue&type=template&id=54a77716&":
+/*!****************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./resources/ts/components/KeyboardShortcuts.vue?vue&type=template&id=54a77716& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [_vm._t("default")], 2)
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/Layout.vue?vue&type=template&id=66ec990b&":
 /*!*****************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./resources/ts/components/Layout.vue?vue&type=template&id=66ec990b& ***!
@@ -8373,10 +8566,28 @@ var render = function() {
         ])
       }),
       _vm._v(" "),
-      _c("p", { staticClass: "text-right body-2 mt-2" }, [
-        _vm._v(
-          "Press 'n' to filter on no category, 'a' to sort on amount, 'e' to categorize\n        the first item in the list"
-        )
+      _c("KeyboardShortcuts", { attrs: { shortcuts: _vm.keyboardShortcuts } }, [
+        _c("p", { staticClass: "text-right body-2 mt-2" }, [
+          _vm._v(
+            "\n            's, a' sorts on amount, 's, d' sort on date, 's, c' sorts on category name"
+          ),
+          _c("br"),
+          _vm._v(
+            "\n            'f, c' filters on no category, 'f, a' shows all"
+          ),
+          _c("br"),
+          _vm._v(
+            "\n            'd y' filters on this year, 'd m' filters on this month, 'd a' clears date filter"
+          ),
+          _c("br"),
+          _vm._v(
+            "\n            'd, ,' navigates one month back, 'd, .' navigates one month ahead"
+          ),
+          _c("br"),
+          _vm._v(
+            "\n            Press 'e' to categorize the first item in the list\n        "
+          )
+        ])
       ]),
       _vm._v(" "),
       _c(
@@ -49575,7 +49786,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!******************************************************!*\
   !*** ./node_modules/vuetify/lib/components/index.js ***!
   \******************************************************/
-/*! exports provided: VApp, VAppBar, VAppBarNavIcon, VAutocomplete, VAvatar, VBtn, VCard, VCardActions, VCardSubtitle, VCardText, VCardTitle, VChip, VContent, VDataTable, VEditDialog, VTableOverflow, VDataTableHeader, VSimpleTable, VVirtualTable, VDatePicker, VDatePickerTitle, VDatePickerHeader, VDatePickerDateTable, VDatePickerMonthTable, VDatePickerYears, VDialog, VDivider, VFileInput, VContainer, VCol, VRow, VSpacer, VLayout, VFlex, VIcon, VListItemActionText, VListItemContent, VListItemTitle, VListItemSubtitle, VList, VListGroup, VListItem, VListItemAction, VListItemAvatar, VListItemIcon, VListItemGroup, VMenu, VNavigationDrawer, VSheet, VSnackbar, VSubheader, VSwitch, VTextField, VToolbar, VToolbarItems, VToolbarTitle, VTreeview, VTreeviewNode, VAlert, VBadge, VBanner, VBottomNavigation, VBottomSheet, VBreadcrumbs, VBreadcrumbsItem, VBreadcrumbsDivider, VBtnToggle, VCalendar, VCalendarDaily, VCalendarWeekly, VCalendarMonthly, VCarousel, VCarouselItem, VCheckbox, VSimpleCheckbox, VChipGroup, VColorPicker, VColorPickerSwatches, VColorPickerCanvas, VCombobox, VCounter, VData, VDataIterator, VDataFooter, VExpansionPanels, VExpansionPanel, VExpansionPanelHeader, VExpansionPanelContent, VFooter, VForm, VHover, VImg, VInput, VItem, VItemGroup, VLabel, VLazy, VMessages, VOverflowBtn, VOverlay, VPagination, VParallax, VPicker, VProgressCircular, VProgressLinear, VRadioGroup, VRadio, VRangeSlider, VRating, VResponsive, VSelect, VSkeletonLoader, VSlider, VSlideGroup, VSlideItem, VSparkline, VSpeedDial, VStepper, VStepperContent, VStepperStep, VStepperHeader, VStepperItems, VSystemBar, VTabs, VTab, VTabItem, VTabsItems, VTabsSlider, VTextarea, VTimeline, VTimelineItem, VTimePicker, VTimePickerClock, VTimePickerTitle, VTooltip, VWindow, VWindowItem, VCarouselTransition, VCarouselReverseTransition, VTabTransition, VTabReverseTransition, VMenuTransition, VFabTransition, VDialogTransition, VDialogBottomTransition, VFadeTransition, VScaleTransition, VScrollXTransition, VScrollXReverseTransition, VScrollYTransition, VScrollYReverseTransition, VSlideXTransition, VSlideXReverseTransition, VSlideYTransition, VSlideYReverseTransition, VExpandTransition, VExpandXTransition */
+/*! exports provided: VApp, VAppBar, VAppBarNavIcon, VAlert, VAutocomplete, VAvatar, VBadge, VBanner, VBottomNavigation, VBottomSheet, VBreadcrumbs, VBreadcrumbsItem, VBreadcrumbsDivider, VBtn, VBtnToggle, VCalendar, VCalendarDaily, VCalendarWeekly, VCalendarMonthly, VCard, VCardActions, VCardSubtitle, VCardText, VCardTitle, VCarousel, VCarouselItem, VCheckbox, VSimpleCheckbox, VChip, VChipGroup, VColorPicker, VColorPickerSwatches, VColorPickerCanvas, VContent, VCombobox, VCounter, VData, VDataIterator, VDataFooter, VDataTable, VEditDialog, VTableOverflow, VDataTableHeader, VSimpleTable, VVirtualTable, VDatePicker, VDatePickerTitle, VDatePickerHeader, VDatePickerDateTable, VDatePickerMonthTable, VDatePickerYears, VDialog, VDivider, VExpansionPanels, VExpansionPanel, VExpansionPanelHeader, VExpansionPanelContent, VFileInput, VFooter, VForm, VContainer, VCol, VRow, VSpacer, VLayout, VFlex, VHover, VIcon, VImg, VInput, VItem, VItemGroup, VLabel, VLazy, VListItemActionText, VListItemContent, VListItemTitle, VListItemSubtitle, VList, VListGroup, VListItem, VListItemAction, VListItemAvatar, VListItemIcon, VListItemGroup, VMenu, VMessages, VNavigationDrawer, VOverflowBtn, VOverlay, VPagination, VSheet, VParallax, VPicker, VProgressCircular, VProgressLinear, VRadioGroup, VRadio, VRangeSlider, VRating, VResponsive, VSelect, VSkeletonLoader, VSlider, VSlideGroup, VSlideItem, VSnackbar, VSparkline, VSpeedDial, VStepper, VStepperContent, VStepperStep, VStepperHeader, VStepperItems, VSubheader, VSwitch, VSystemBar, VTabs, VTab, VTabItem, VTabsItems, VTabsSlider, VTextarea, VTextField, VTimeline, VTimelineItem, VTimePicker, VTimePickerClock, VTimePickerTitle, VToolbar, VToolbarItems, VToolbarTitle, VTooltip, VTreeview, VTreeviewNode, VWindow, VWindowItem, VCarouselTransition, VCarouselReverseTransition, VTabTransition, VTabReverseTransition, VMenuTransition, VFabTransition, VDialogTransition, VDialogBottomTransition, VFadeTransition, VScaleTransition, VScrollXTransition, VScrollXReverseTransition, VScrollYTransition, VScrollYReverseTransition, VSlideXTransition, VSlideXReverseTransition, VSlideYTransition, VSlideYReverseTransition, VExpandTransition, VExpandXTransition */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -51013,7 +51224,7 @@ Vuetify.version = "2.1.8";
 /*!*******************************************!*\
   !*** ./node_modules/vuetify/lib/index.js ***!
   \*******************************************/
-/*! exports provided: colors, default, VApp, VAppBar, VAppBarNavIcon, VAutocomplete, VAvatar, VBtn, VCard, VCardActions, VCardSubtitle, VCardText, VCardTitle, VChip, VContent, VDataTable, VEditDialog, VTableOverflow, VDataTableHeader, VSimpleTable, VVirtualTable, VDatePicker, VDatePickerTitle, VDatePickerHeader, VDatePickerDateTable, VDatePickerMonthTable, VDatePickerYears, VDialog, VDivider, VFileInput, VContainer, VCol, VRow, VSpacer, VLayout, VFlex, VIcon, VListItemActionText, VListItemContent, VListItemTitle, VListItemSubtitle, VList, VListGroup, VListItem, VListItemAction, VListItemAvatar, VListItemIcon, VListItemGroup, VMenu, VNavigationDrawer, VSheet, VSnackbar, VSubheader, VSwitch, VTextField, VToolbar, VToolbarItems, VToolbarTitle, VTreeview, VTreeviewNode, ClickOutside, Intersect, Mutate, Resize, Ripple, Scroll, Touch, VAlert, VBadge, VBanner, VBottomNavigation, VBottomSheet, VBreadcrumbs, VBreadcrumbsItem, VBreadcrumbsDivider, VBtnToggle, VCalendar, VCalendarDaily, VCalendarWeekly, VCalendarMonthly, VCarousel, VCarouselItem, VCheckbox, VSimpleCheckbox, VChipGroup, VColorPicker, VColorPickerSwatches, VColorPickerCanvas, VCombobox, VCounter, VData, VDataIterator, VDataFooter, VExpansionPanels, VExpansionPanel, VExpansionPanelHeader, VExpansionPanelContent, VFooter, VForm, VHover, VImg, VInput, VItem, VItemGroup, VLabel, VLazy, VMessages, VOverflowBtn, VOverlay, VPagination, VParallax, VPicker, VProgressCircular, VProgressLinear, VRadioGroup, VRadio, VRangeSlider, VRating, VResponsive, VSelect, VSkeletonLoader, VSlider, VSlideGroup, VSlideItem, VSparkline, VSpeedDial, VStepper, VStepperContent, VStepperStep, VStepperHeader, VStepperItems, VSystemBar, VTabs, VTab, VTabItem, VTabsItems, VTabsSlider, VTextarea, VTimeline, VTimelineItem, VTimePicker, VTimePickerClock, VTimePickerTitle, VTooltip, VWindow, VWindowItem, VCarouselTransition, VCarouselReverseTransition, VTabTransition, VTabReverseTransition, VMenuTransition, VFabTransition, VDialogTransition, VDialogBottomTransition, VFadeTransition, VScaleTransition, VScrollXTransition, VScrollXReverseTransition, VScrollYTransition, VScrollYReverseTransition, VSlideXTransition, VSlideXReverseTransition, VSlideYTransition, VSlideYReverseTransition, VExpandTransition, VExpandXTransition */
+/*! exports provided: ClickOutside, Intersect, Mutate, Resize, Ripple, Scroll, Touch, colors, default, VApp, VAppBar, VAppBarNavIcon, VAlert, VAutocomplete, VAvatar, VBadge, VBanner, VBottomNavigation, VBottomSheet, VBreadcrumbs, VBreadcrumbsItem, VBreadcrumbsDivider, VBtn, VBtnToggle, VCalendar, VCalendarDaily, VCalendarWeekly, VCalendarMonthly, VCard, VCardActions, VCardSubtitle, VCardText, VCardTitle, VCarousel, VCarouselItem, VCheckbox, VSimpleCheckbox, VChip, VChipGroup, VColorPicker, VColorPickerSwatches, VColorPickerCanvas, VContent, VCombobox, VCounter, VData, VDataIterator, VDataFooter, VDataTable, VEditDialog, VTableOverflow, VDataTableHeader, VSimpleTable, VVirtualTable, VDatePicker, VDatePickerTitle, VDatePickerHeader, VDatePickerDateTable, VDatePickerMonthTable, VDatePickerYears, VDialog, VDivider, VExpansionPanels, VExpansionPanel, VExpansionPanelHeader, VExpansionPanelContent, VFileInput, VFooter, VForm, VContainer, VCol, VRow, VSpacer, VLayout, VFlex, VHover, VIcon, VImg, VInput, VItem, VItemGroup, VLabel, VLazy, VListItemActionText, VListItemContent, VListItemTitle, VListItemSubtitle, VList, VListGroup, VListItem, VListItemAction, VListItemAvatar, VListItemIcon, VListItemGroup, VMenu, VMessages, VNavigationDrawer, VOverflowBtn, VOverlay, VPagination, VSheet, VParallax, VPicker, VProgressCircular, VProgressLinear, VRadioGroup, VRadio, VRangeSlider, VRating, VResponsive, VSelect, VSkeletonLoader, VSlider, VSlideGroup, VSlideItem, VSnackbar, VSparkline, VSpeedDial, VStepper, VStepperContent, VStepperStep, VStepperHeader, VStepperItems, VSubheader, VSwitch, VSystemBar, VTabs, VTab, VTabItem, VTabsItems, VTabsSlider, VTextarea, VTextField, VTimeline, VTimelineItem, VTimePicker, VTimePickerClock, VTimePickerTitle, VToolbar, VToolbarItems, VToolbarTitle, VTooltip, VTreeview, VTreeviewNode, VWindow, VWindowItem, VCarouselTransition, VCarouselReverseTransition, VTabTransition, VTabReverseTransition, VMenuTransition, VFabTransition, VDialogTransition, VDialogBottomTransition, VFadeTransition, VScaleTransition, VScrollXTransition, VScrollXReverseTransition, VScrollYTransition, VScrollYReverseTransition, VSlideXTransition, VSlideXReverseTransition, VSlideYTransition, VSlideYReverseTransition, VExpandTransition, VExpandXTransition */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -51025,11 +51236,37 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VAppBarNavIcon", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VAppBarNavIcon"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VAlert", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VAlert"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VAutocomplete", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VAutocomplete"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VAvatar", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VAvatar"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBadge", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBadge"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBanner", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBanner"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBottomNavigation", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBottomNavigation"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBottomSheet", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBottomSheet"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBreadcrumbs", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBreadcrumbs"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBreadcrumbsItem", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBreadcrumbsItem"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBreadcrumbsDivider", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBreadcrumbsDivider"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBtn", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBtn"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBtnToggle", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBtnToggle"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCalendar", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCalendar"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCalendarDaily", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCalendarDaily"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCalendarWeekly", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCalendarWeekly"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCalendarMonthly", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCalendarMonthly"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCard", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCard"]; });
 
@@ -51041,9 +51278,35 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCardTitle", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCardTitle"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCarousel", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCarousel"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCarouselItem", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCarouselItem"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCheckbox", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCheckbox"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSimpleCheckbox", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSimpleCheckbox"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VChip", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VChip"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VChipGroup", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VChipGroup"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VColorPicker", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VColorPicker"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VColorPickerSwatches", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VColorPickerSwatches"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VColorPickerCanvas", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VColorPickerCanvas"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VContent", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VContent"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCombobox", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCombobox"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCounter", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCounter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VData", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VData"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VDataIterator", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VDataIterator"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VDataFooter", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VDataFooter"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VDataTable", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VDataTable"]; });
 
@@ -51073,7 +51336,19 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VDivider", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VDivider"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VExpansionPanels", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VExpansionPanels"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VExpansionPanel", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VExpansionPanel"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VExpansionPanelHeader", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VExpansionPanelHeader"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VExpansionPanelContent", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VExpansionPanelContent"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VFileInput", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VFileInput"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VFooter", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VFooter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VForm", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VForm"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VContainer", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VContainer"]; });
 
@@ -51087,7 +51362,21 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VFlex", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VFlex"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VHover", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VHover"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VIcon", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VIcon"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VImg", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VImg"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VInput", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VInput"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VItem", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VItem"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VItemGroup", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VItemGroup"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VLabel", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VLabel"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VLazy", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VLazy"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VListItemActionText", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VListItemActionText"]; });
 
@@ -51113,113 +51402,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VMenu", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VMenu"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VNavigationDrawer", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VNavigationDrawer"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSheet", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSheet"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSnackbar", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSnackbar"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSubheader", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSubheader"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSwitch", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSwitch"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTextField", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTextField"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VToolbar", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VToolbar"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VToolbarItems", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VToolbarItems"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VToolbarTitle", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VToolbarTitle"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTreeview", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTreeview"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTreeviewNode", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTreeviewNode"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VAlert", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VAlert"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBadge", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBadge"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBanner", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBanner"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBottomNavigation", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBottomNavigation"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBottomSheet", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBottomSheet"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBreadcrumbs", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBreadcrumbs"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBreadcrumbsItem", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBreadcrumbsItem"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBreadcrumbsDivider", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBreadcrumbsDivider"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VBtnToggle", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VBtnToggle"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCalendar", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCalendar"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCalendarDaily", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCalendarDaily"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCalendarWeekly", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCalendarWeekly"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCalendarMonthly", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCalendarMonthly"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCarousel", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCarousel"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCarouselItem", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCarouselItem"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCheckbox", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCheckbox"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSimpleCheckbox", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSimpleCheckbox"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VChipGroup", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VChipGroup"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VColorPicker", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VColorPicker"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VColorPickerSwatches", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VColorPickerSwatches"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VColorPickerCanvas", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VColorPickerCanvas"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCombobox", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCombobox"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VCounter", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VCounter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VData", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VData"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VDataIterator", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VDataIterator"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VDataFooter", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VDataFooter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VExpansionPanels", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VExpansionPanels"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VExpansionPanel", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VExpansionPanel"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VExpansionPanelHeader", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VExpansionPanelHeader"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VExpansionPanelContent", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VExpansionPanelContent"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VFooter", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VFooter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VForm", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VForm"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VHover", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VHover"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VImg", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VImg"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VInput", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VInput"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VItem", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VItem"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VItemGroup", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VItemGroup"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VLabel", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VLabel"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VLazy", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VLazy"]; });
-
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VMessages", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VMessages"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VNavigationDrawer", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VNavigationDrawer"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VOverflowBtn", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VOverflowBtn"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VOverlay", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VOverlay"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VPagination", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VPagination"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSheet", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSheet"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VParallax", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VParallax"]; });
 
@@ -51249,6 +51442,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSlideItem", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSlideItem"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSnackbar", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSnackbar"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSparkline", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSparkline"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSpeedDial", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSpeedDial"]; });
@@ -51262,6 +51457,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VStepperHeader", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VStepperHeader"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VStepperItems", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VStepperItems"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSubheader", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSubheader"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSwitch", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSwitch"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VSystemBar", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VSystemBar"]; });
 
@@ -51277,6 +51476,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTextarea", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTextarea"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTextField", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTextField"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTimeline", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTimeline"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTimelineItem", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTimelineItem"]; });
@@ -51287,7 +51488,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTimePickerTitle", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTimePickerTitle"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VToolbar", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VToolbar"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VToolbarItems", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VToolbarItems"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VToolbarTitle", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VToolbarTitle"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTooltip", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTooltip"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTreeview", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTreeview"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VTreeviewNode", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VTreeviewNode"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "VWindow", function() { return _components__WEBPACK_IMPORTED_MODULE_0__["VWindow"]; });
 
@@ -60360,6 +60571,7 @@ var map = {
 	"./components/DateRangeInput.vue": "./resources/ts/components/DateRangeInput.vue",
 	"./components/Home.vue": "./resources/ts/components/Home.vue",
 	"./components/ImportTransactions.vue": "./resources/ts/components/ImportTransactions.vue",
+	"./components/KeyboardShortcuts.vue": "./resources/ts/components/KeyboardShortcuts.vue",
 	"./components/Layout.vue": "./resources/ts/components/Layout.vue",
 	"./components/TransactionFilters.vue": "./resources/ts/components/TransactionFilters.vue",
 	"./components/TransactionForm.vue": "./resources/ts/components/TransactionForm.vue",
@@ -61330,6 +61542,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_ImportTransactions_vue_vue_type_template_id_2a52c1fb___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_ImportTransactions_vue_vue_type_template_id_2a52c1fb___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/ts/components/KeyboardShortcuts.vue":
+/*!*******************************************************!*\
+  !*** ./resources/ts/components/KeyboardShortcuts.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _KeyboardShortcuts_vue_vue_type_template_id_54a77716___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./KeyboardShortcuts.vue?vue&type=template&id=54a77716& */ "./resources/ts/components/KeyboardShortcuts.vue?vue&type=template&id=54a77716&");
+/* harmony import */ var _KeyboardShortcuts_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./KeyboardShortcuts.vue?vue&type=script&lang=js& */ "./resources/ts/components/KeyboardShortcuts.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _KeyboardShortcuts_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _KeyboardShortcuts_vue_vue_type_template_id_54a77716___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _KeyboardShortcuts_vue_vue_type_template_id_54a77716___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/ts/components/KeyboardShortcuts.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/ts/components/KeyboardShortcuts.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/ts/components/KeyboardShortcuts.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_KeyboardShortcuts_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vuetify-loader/lib/loader.js!../../../node_modules/vue-loader/lib??vue-loader-options!./KeyboardShortcuts.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/KeyboardShortcuts.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_KeyboardShortcuts_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/ts/components/KeyboardShortcuts.vue?vue&type=template&id=54a77716&":
+/*!**************************************************************************************!*\
+  !*** ./resources/ts/components/KeyboardShortcuts.vue?vue&type=template&id=54a77716& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_KeyboardShortcuts_vue_vue_type_template_id_54a77716___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vuetify-loader/lib/loader.js!../../../node_modules/vue-loader/lib??vue-loader-options!./KeyboardShortcuts.vue?vue&type=template&id=54a77716& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/KeyboardShortcuts.vue?vue&type=template&id=54a77716&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_KeyboardShortcuts_vue_vue_type_template_id_54a77716___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_KeyboardShortcuts_vue_vue_type_template_id_54a77716___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

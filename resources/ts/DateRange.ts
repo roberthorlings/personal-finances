@@ -23,8 +23,8 @@ export default {
         month: month(today.getFullYear(), today.getMonth())
     },
     previous: {
-        year: (y: number) => year(y -1),
-        month: (y: number, m: number) => month(y, m -1)
+        year: (y: number) => year(y - 1),
+        month: (y: number, m: number) => month(y, m - 1)
     },
     next: {
         year: (y: number) => year(y + 1),

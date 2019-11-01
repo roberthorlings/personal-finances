@@ -34,7 +34,7 @@
             menu: false,
         }),
         methods: {
-            save (date) {
+            save(date) {
                 this.menu = false;
                 this.$emit("input", date);
             }

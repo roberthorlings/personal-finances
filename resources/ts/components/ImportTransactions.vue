@@ -43,6 +43,7 @@
 
 <script>
     import TransactionsApi from '../apis/transactionsApi';
+
     export default {
         name: 'ImportTransactions',
         data: () => ({

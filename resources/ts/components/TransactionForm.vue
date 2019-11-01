@@ -50,17 +50,17 @@
 
 <script>
     export default {
-  name: 'TransactionForm',
-  methods: {
-    update(key, value) {
-        this.$emit('input', { ...this.value, [key]: value })
-    },
-  },
+        name: 'TransactionForm',
+        methods: {
+            update(key, value) {
+                this.$emit('input', {...this.value, [key]: value})
+            },
+        },
 
-  props: {
-      value: Object,
-      categories: Array,
-      accounts: Array
-  }
-}
+        props: {
+            value: Object,
+            categories: Array,
+            accounts: Array
+        }
+    }
 </script>

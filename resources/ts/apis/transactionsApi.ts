@@ -1,5 +1,5 @@
 import axios from 'axios';
-import genericApi, {Identifyable} from "./genericApi";
+import {Identifyable} from "./genericApi";
 import {Category} from "./categoriesApi";
 import genericWithStatsApi from "./genericWithStatsApi";
 
@@ -26,7 +26,7 @@ const importTransactions = (type: string, file: File, dryRun: boolean) => {
     formData.append("file", file);
     formData.append("type", type);
 
-    if(dryRun) {
+    if (dryRun) {
         formData.append("dryRun", 'true');
     }
 

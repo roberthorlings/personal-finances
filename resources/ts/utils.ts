@@ -4,7 +4,7 @@
  * @param prefix
  */
 export const toFlatList = (items: Array<any>, prefix = ''): Array<any> => {
-    if(!items || items.length === 0)
+    if (!items || items.length === 0)
         return [];
 
     return items.reduce((list, item) => {

@@ -119,25 +119,25 @@
         },
 
         watch: {
-            dialog (val) {
+            dialog(val) {
                 val || this.close()
             }
         },
 
-        mounted () {
+        mounted() {
             this.getDataFromApi();
             this.resetForm();
         },
 
         methods: {
-            resetForm () {
+            resetForm() {
                 this.editedItem = {
                     name: '',
                     key: '',
                     parent_id: undefined
                 }
             },
-            getDataFromApi () {
+            getDataFromApi() {
                 this.loading = true;
                 this.error = false;
                 return CategoriesApi.tree()
@@ -163,28 +163,28 @@
                 this.dialog = true
             },
 
-            addChild (item) {
+            addChild(item) {
                 this.formTitle = 'Add child category to ' + item.name;
                 this.editedItem = {parent_id: item.id};
                 this.dialog = true
             },
 
-            editItem (item) {
+            editItem(item) {
                 this.formTitle = `Edit category ${item.name} (${item.id})`;
                 this.editedItem = {...item};
                 this.dialog = true
             },
 
-            deleteItem (item) {
+            deleteItem(item) {
                 confirm('Are you sure you want to delete this category?') && CategoriesApi.destroy(item.id).then(() => this.getDataFromApi());
             },
 
-            close () {
+            close() {
                 this.dialog = false;
                 this.resetForm();
             },
 
-            save () {
+            save() {
                 console.log(this.editedItem);
                 CategoriesApi.store(this.editedItem).then(() => this.getDataFromApi());
                 this.close();

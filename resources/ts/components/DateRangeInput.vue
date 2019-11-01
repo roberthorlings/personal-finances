@@ -54,6 +54,7 @@
 </template>
 <script>
     import DateRange from "../DateRange";
+
     export default {
         name: 'DateRangeInput',
         props: {
@@ -65,7 +66,7 @@
             currentValue: []
         }),
         watch: {
-            value: function(newVal) {
+            value: function (newVal) {
                 this.currentValue = newVal;
             }
         },
@@ -81,7 +82,7 @@
                     {title: 'Last month', value: DateRange.last.month}
                 ];
 
-                if(this.value && this.value.length > 0) {
+                if (this.value && this.value.length > 0) {
                     const [y, m] = this.value[0].split('-').map(s => parseInt(s, 10));
                     const relativePresets = [
                         {title: 'Previous year', value: DateRange.previous.year(y)},

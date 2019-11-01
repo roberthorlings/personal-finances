@@ -92,107 +92,108 @@
 </template>
 
 <script>
-import AccountsApi from '../apis/accountsApi';
-export default {
-  name: 'Accounts',
-  data: () => ({
-    dialog: false,
-    error: false,
-    loading: true,
-    headers: [
-      {
-        text: 'Name',
-        align: 'left',
-        value: 'name',
-      },
-      { text: 'IBAN', value: 'iban' },
-      { text: 'Balance', value: 'balance', align: 'end' },
-      { text: 'Last updated', value: 'updated_at' },
-      { text: 'Actions', value: 'action', sortable: false },
-    ],
-    items: [],
-    totalItems: 0,
-    options: {},
-    editedItem: {}
-}),
+    import AccountsApi from '../apis/accountsApi';
 
-computed: {
-    formTitle () {
-        return this.isEditing() ? 'Edit account' : 'New account'
-    },
-},
+    export default {
+        name: 'Accounts',
+        data: () => ({
+            dialog: false,
+            error: false,
+            loading: true,
+            headers: [
+                {
+                    text: 'Name',
+                    align: 'left',
+                    value: 'name',
+                },
+                {text: 'IBAN', value: 'iban'},
+                {text: 'Balance', value: 'balance', align: 'end'},
+                {text: 'Last updated', value: 'updated_at'},
+                {text: 'Actions', value: 'action', sortable: false},
+            ],
+            items: [],
+            totalItems: 0,
+            options: {},
+            editedItem: {}
+        }),
 
-watch: {
-    dialog (val) {
-        val || this.close()
-    },
-    options: {
-        handler () {
-            this.getDataFromApi();
+        computed: {
+            formTitle() {
+                return this.isEditing() ? 'Edit account' : 'New account'
+            },
         },
-        deep: true,
-    },
-},
 
-mounted () {
-    this.getDataFromApi();
-    this.resetForm();
-},
+        watch: {
+            dialog(val) {
+                val || this.close()
+            },
+            options: {
+                handler() {
+                    this.getDataFromApi();
+                },
+                deep: true,
+            },
+        },
 
-methods: {
-    resetForm () {
-        this.editedItem = {
-            name: '',
-            iban: ''
-        }
-    },
-    isEditing() {
-        return this.editedItem.id;
-    },
-    getDataFromApi () {
-        this.loading = true;
-        this.error = false;
-        return AccountsApi.list(this.options)
-            .then(data => {
-                this.loading = false;
-                this.items = data.items;
-                this.totalItems = data.total;
-            })
-            .catch(e => {
-                this.loading = false;
-                this.error = true;
-            });
-    },
-    computeSummaryStats() {
-        this.loading = true;
-        return AccountsApi.stats()
-            .finally(() => {
-                this.loading = false;
-            });
-    },
-    addItem() {
-        this.resetForm();
-        this.dialog = true
-    },
+        mounted() {
+            this.getDataFromApi();
+            this.resetForm();
+        },
 
-    editItem (item) {
-        this.editedItem = {...item};
-        this.dialog = true
-    },
+        methods: {
+            resetForm() {
+                this.editedItem = {
+                    name: '',
+                    iban: ''
+                }
+            },
+            isEditing() {
+                return this.editedItem.id;
+            },
+            getDataFromApi() {
+                this.loading = true;
+                this.error = false;
+                return AccountsApi.list(this.options)
+                    .then(data => {
+                        this.loading = false;
+                        this.items = data.items;
+                        this.totalItems = data.total;
+                    })
+                    .catch(e => {
+                        this.loading = false;
+                        this.error = true;
+                    });
+            },
+            computeSummaryStats() {
+                this.loading = true;
+                return AccountsApi.stats()
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            },
+            addItem() {
+                this.resetForm();
+                this.dialog = true
+            },
 
-    deleteItem (item) {
-        confirm('Are you sure you want to delete this item?') && AccountsApi.destroy(item.id).then(() => this.getDataFromApi());
-    },
+            editItem(item) {
+                this.editedItem = {...item};
+                this.dialog = true
+            },
 
-    close () {
-        this.dialog = false;
-        this.resetForm();
-    },
+            deleteItem(item) {
+                confirm('Are you sure you want to delete this item?') && AccountsApi.destroy(item.id).then(() => this.getDataFromApi());
+            },
 
-    save () {
-        AccountsApi.store(this.editedItem).then(() => this.getDataFromApi());
-        this.close();
-    },
-  },
-}
+            close() {
+                this.dialog = false;
+                this.resetForm();
+            },
+
+            save() {
+                AccountsApi.store(this.editedItem).then(() => this.getDataFromApi());
+                this.close();
+            },
+        },
+    }
 </script>

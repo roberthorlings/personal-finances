@@ -3243,6 +3243,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3288,6 +3294,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }],
       items: [],
       totalItems: 0,
+      skip: 0,
       options: {},
       filters: {
         category_id: _TransactionFilters__WEBPACK_IMPORTED_MODULE_3__["ID_NO_FILTER"],
@@ -3332,6 +3339,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.keyboardShortcuts = [{
       sequence: ['e'],
       callback: this.categorizeFirst
+    }, {
+      sequence: ['k'],
+      callback: this.skipItem
+    }, {
+      sequence: ['r'],
+      callback: this.resetSkipped
     }, {
       sequence: ['f', 'c'],
       callback: this.filterNoCategory
@@ -3401,7 +3414,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }
 
       return _apis_transactionsApi__WEBPACK_IMPORTED_MODULE_0__["default"].list(_objectSpread({}, this.options, {
-        filters: filters
+        filters: filters,
+        skip: this.skip
       })).then(function (data) {
         _this2.loading = false;
         _this2.items = data.items;
@@ -3518,6 +3532,14 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
           m = _this$filters$date_ra4[1];
 
       this.filters.date_range = _DateRange__WEBPACK_IMPORTED_MODULE_8__["default"].next.month(y, m);
+    },
+    skipItem: function skipItem() {
+      this.skip = (this.skip || 0) + 1;
+      this.getDataFromApi();
+    },
+    resetSkipped: function resetSkipped() {
+      this.skip = undefined;
+      this.getDataFromApi();
     },
     applySort: function applySort(column) {
       if (this.options.sortBy[0] === column) {
@@ -8306,6 +8328,23 @@ var render = function() {
                       }
                     }),
                     _vm._v(" "),
+                    _vm.skip
+                      ? _c("v-divider", {
+                          staticClass: "mx-4",
+                          attrs: { inset: "", vertical: "" }
+                        })
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.skip
+                      ? _c("span", { on: { click: _vm.resetSkipped } }, [
+                          _vm._v(
+                            "\n                    Skipping " +
+                              _vm._s(_vm.skip) +
+                              " item(s)\n                "
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
                     _c("div", { staticClass: "flex-grow-1" }),
                     _vm._v(" "),
                     _c(
@@ -8585,8 +8624,13 @@ var render = function() {
           ),
           _c("br"),
           _vm._v(
-            "\n            Press 'e' to categorize the first item in the list\n        "
-          )
+            "\n            Press 'e' to categorize the first item in the list"
+          ),
+          _c("br"),
+          _vm._v(
+            "\n            Press 'k' to skip the first entry in the list, 'r' to reset to zero"
+          ),
+          _c("br")
         ])
       ]),
       _vm._v(" "),
@@ -60725,7 +60769,7 @@ var DEFAULT_LIST_OPTIONS = {
     var list = function (options) {
         if (options === void 0) { options = DEFAULT_LIST_OPTIONS; }
         return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(endpoint, {
-            params: __assign(__assign({}, (options.filters ? options.filters : {})), { sortBy: options.sortBy[0], sortOrder: options.sortDesc[0] ? 'desc' : 'asc', page: options.page || 1, per_page: options.itemsPerPage > -1 ? options.itemsPerPage : undefined })
+            params: __assign(__assign({}, (options.filters ? options.filters : {})), { sortBy: options.sortBy[0], sortOrder: options.sortDesc[0] ? 'desc' : 'asc', page: options.page || 1, per_page: options.itemsPerPage > -1 ? options.itemsPerPage : undefined, skip: options.skip })
         }).then(function (response) { return ({
             items: response.data.data,
             total: response.data.meta.total

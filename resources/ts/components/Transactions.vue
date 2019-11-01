@@ -22,6 +22,11 @@
                         :accounts="accounts"
                     ></TransactionFilters>
 
+                    <v-divider class="mx-4" inset vertical v-if="skip"></v-divider>
+                    <span v-if="skip" @click="resetSkipped">
+                        Skipping {{skip}} item(s)
+                    </span>
+
                     <div class="flex-grow-1"></div>
                     <v-btn text icon color="primary" @click="getDataFromApi">
                         <v-icon>mdi-cached</v-icon>
@@ -110,7 +115,8 @@
                 'f, c' filters on no category, 'f, a' shows all<br />
                 'd y' filters on this year, 'd m' filters on this month, 'd a' clears date filter<br />
                 'd, ,' navigates one month back, 'd, .' navigates one month ahead<br />
-                Press 'e' to categorize the first item in the list
+                Press 'e' to categorize the first item in the list<br />
+                Press 'k' to skip the first entry in the list, 'r' to reset to zero<br />
             </p>
         </KeyboardShortcuts>
         <v-snackbar
@@ -157,6 +163,7 @@
             ],
             items: [],
             totalItems: 0,
+            skip: 0,
             options: {},
             filters: {
                 category_id: ID_NO_FILTER,
@@ -202,6 +209,8 @@
 
             this.keyboardShortcuts = [
                 {sequence: ['e'], callback: this.categorizeFirst},
+                {sequence: ['k'], callback: this.skipItem},
+                {sequence: ['r'], callback: this.resetSkipped},
                 {sequence: ['f', 'c'], callback: this.filterNoCategory},
                 {sequence: ['f', 'a'], callback: this.filterAllCategories},
                 {sequence: ['d', ','], callback: this.filterPreviousMonth},
@@ -242,7 +251,7 @@
                     }
                 }
 
-                return TransactionsApi.list({...this.options, filters})
+                return TransactionsApi.list({...this.options, filters, skip: this.skip})
                     .then(data => {
                         this.loading = false;
                         this.items = data.items;
@@ -344,6 +353,16 @@
 
                 const [y, m] = this.filters.date_range[0].split('-').map(s => parseInt(s, 10));
                 this.filters.date_range = DateRange.next.month(y, m);
+            },
+
+            skipItem(){
+                this.skip = (this.skip || 0) + 1
+                this.getDataFromApi();
+            },
+
+            resetSkipped() {
+                this.skip = undefined;
+                this.getDataFromApi();
             },
 
             applySort(column) {

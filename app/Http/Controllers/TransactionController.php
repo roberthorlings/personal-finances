@@ -57,8 +57,6 @@ class TransactionController extends Controller
             $queryBuilder->where("date", "<=", $request->get("date_end"));
         }
 
-
-
         return TransactionResource::collection($this->getPaginatedAndSorted($request, $queryBuilder, ['transactions.*']));
     }
 

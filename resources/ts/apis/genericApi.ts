@@ -5,6 +5,7 @@ export interface ListOptions {
     sortDesc: boolean[],
     page: number,
     itemsPerPage: number,
+    skip?: number,
     filters?: object
 }
 
@@ -35,7 +36,8 @@ export default <T extends Identifyable>(endpoint: string) => {
                     sortBy: options.sortBy[0],
                     sortOrder: options.sortDesc[0] ? 'desc' : 'asc',
                     page: options.page || 1,
-                    per_page: options.itemsPerPage > -1 ? options.itemsPerPage : undefined
+                    per_page: options.itemsPerPage > -1 ? options.itemsPerPage : undefined,
+                    skip: options.skip
                 }
             }
         ).then(response => ({

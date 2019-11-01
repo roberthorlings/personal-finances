@@ -3249,6 +3249,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 
@@ -3277,6 +3280,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       }, {
         text: 'Account',
         value: 'account.name'
+      }, {
+        text: 'Opposing account',
+        value: 'opposing_account_name'
       }, {
         text: 'Description',
         value: 'description'
@@ -8523,6 +8529,19 @@ var render = function() {
                     }
                   },
                   [_vm._v(_vm._s(_vm._f("toCurrency")(item.amount)))]
+                )
+              ]
+            }
+          },
+          {
+            key: "item.opposing_account_name",
+            fn: function(ref) {
+              var item = ref.item
+              return [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(item.opposing_account.name) +
+                    "\n        "
                 )
               ]
             }

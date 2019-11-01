@@ -85,6 +85,9 @@
             <template v-slot:item.amount="{ item }">
                 <v-chip :color="item.amount < 0 ? 'red' : ' green'" dark>{{ item.amount | toCurrency }}</v-chip>
             </template>
+            <template v-slot:item.opposing_account_name="{ item }">
+                {{ item.opposing_account.name }}
+            </template>
             <template v-slot:item.category.name="props">
                 <v-edit-dialog
                     :return-value.sync="props.item.category_id"
@@ -156,6 +159,7 @@
             headers: [
                 {text: 'Date', value: 'date'},
                 {text: 'Account', value: 'account.name'},
+                {text: 'Opposing account', value: 'opposing_account_name'},
                 {text: 'Description', value: 'description'},
                 {text: 'Category', value: 'category.name'},
                 {text: 'Amount', value: 'amount', align: 'end'},

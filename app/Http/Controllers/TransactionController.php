@@ -49,6 +49,16 @@ class TransactionController extends Controller
             $queryBuilder->where("account_id", "=", $account_id);
         }
 
+        if($request->has("date_start")) {
+            $queryBuilder->where("date", ">=", $request->get("date_start"));
+        }
+
+        if($request->has("date_end")) {
+            $queryBuilder->where("date", "<=", $request->get("date_end"));
+        }
+
+
+
         return TransactionResource::collection($this->getPaginatedAndSorted($request, $queryBuilder, ['transactions.*']));
     }
 

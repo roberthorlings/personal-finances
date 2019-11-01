@@ -3,6 +3,9 @@
         <v-data-table
             :headers="headers"
             :items="items"
+            :footer-props="{
+                itemsPerPageOptions: [10, 20, 50, -1]
+            }"
             :options.sync="options"
             :server-items-length="totalItems"
             :loading="loading"
@@ -16,6 +19,7 @@
                     <v-edit-dialog
                         @open="editedFilters = {...filters}"
                         @save="filters = {...editedFilters}"
+                        large
                     >
                         <v-chip
                             v-for="filter in filterDescription"
@@ -51,6 +55,10 @@
                                     item-text="name"
                                     label="Account"
                                 ></v-autocomplete>
+                                <DateRangeInput
+                                    v-model="editedFilters.date_range"
+                                    label="Date range"
+                                ></DateRangeInput>
                             </div>
                         </template>
                     </v-edit-dialog>
@@ -184,7 +192,8 @@ export default {
     options: {},
     filters: {
         category_id: ID_NO_FILTER,
-        account_id: ID_NO_FILTER
+        account_id: ID_NO_FILTER,
+        date_range: []
     },
     categories: [],
     accounts: [],
@@ -225,6 +234,15 @@ computed: {
                 label: 'Account',
                 icon: 'account_balance',
                 color: 'orange'
+            });
+        }
+
+        if(this.filters.date_range && this.filters.date_range.length > 0) {
+            filters.push({
+                name: this.filters.date_range.join(' ~ '),
+                label: 'Date range',
+                icon: 'date_range',
+                color: 'yellow'
             });
         }
 
@@ -300,9 +318,10 @@ methods: {
     isEditing() {
         return this.editedItem.id;
     },
-    appyFilters() {
+    applyFilters() {
       this.filters.category_id = this.editedFilters.category_id;
       this.filters.account_id = this.editedFilters.account_id;
+      this.filters.date_range = this.editedFilters.date_range;
     },
     getDataFromApi () {
         this.loading = true;
@@ -311,6 +330,14 @@ methods: {
         const filters = {};
         if(this.filters.category_id !== ID_NO_FILTER) filters.category_id = this.filters.category_id;
         if(this.filters.account_id !== ID_NO_FILTER) filters.account_id = this.filters.account_id;
+        if(this.filters.date_range) {
+            filters.date_start = this.filters.date_range[0];
+            if(this.filters.date_range.length == 1) {
+                filters.date_end = this.filters.date_range[0];
+            } else if(this.filters.date_range.length > 1) {
+                filters.date_end = this.filters.date_range[1];
+            }
+        }
 
         return TransactionsApi.list({...this.options, filters})
             .then(data => {
@@ -376,7 +403,7 @@ methods: {
 
     categorizeFirst() {
         if(this.items.length) {
-            const firstId = this.items[0].id
+            const firstId = this.items[0].id;
             this.$refs['category-name-' + firstId].click();
         }
     },

@@ -16,52 +16,12 @@
                     <v-toolbar-title>Transactions</v-toolbar-title>
                     <v-divider class="mx-4" inset vertical></v-divider>
 
-                    <v-edit-dialog
-                        @open="editedFilters = {...filters}"
-                        @save="filters = {...editedFilters}"
-                        large
-                    >
-                        <v-chip
-                            v-for="filter in filterDescription"
-                            :key="filter.label"
-                            v-if="filterDescription.length"
-                            :color="filter.color"
-                            text-color="white"
-                            class="mx-2"
-                        >
-                            <v-avatar left>
-                                <v-icon>{{filter.icon}}</v-icon>
-                            </v-avatar>
-                            {{filter.name}}
-                        </v-chip>
-                        <span v-if="!filterDescription.length">
-                            No filters
-                        </span>
+                    <TransactionFilters
+                        v-model="filters"
+                        :categories="categories"
+                        :accounts="accounts"
+                    ></TransactionFilters>
 
-                        <template v-slot:input>
-                            <div class="my-4">
-                                <v-autocomplete
-                                    v-model="editedFilters.category_id"
-                                    :items="categoryFilters"
-                                    item-value="id"
-                                    item-text="text"
-                                    label="Category"
-                                    auto-select-first
-                                ></v-autocomplete>
-                                <v-autocomplete
-                                    v-model="editedFilters.account_id"
-                                    :items="accountFilters"
-                                    item-value="id"
-                                    item-text="name"
-                                    label="Account"
-                                ></v-autocomplete>
-                                <DateRangeInput
-                                    v-model="editedFilters.date_range"
-                                    label="Date range"
-                                ></DateRangeInput>
-                            </div>
-                        </template>
-                    </v-edit-dialog>
                     <div class="flex-grow-1"></div>
                     <v-btn text icon color="primary" @click="getDataFromApi">
                         <v-icon>mdi-cached</v-icon>
@@ -165,16 +125,14 @@
 import TransactionsApi from '../apis/transactionsApi';
 import TransactionForm from "./TransactionForm";
 import ImportTransactions from "./ImportTransactions";
+import TransactionFilters, {ID_NO_FILTER, ID_NO_CATEGORY} from "./TransactionFilters";
 import CategoriesApi from "../apis/categoriesApi";
 import AccountsApi from '../apis/accountsApi';
 import {toFlatList} from "../utils";
 
-const ID_NO_FILTER = -1;
-const ID_NO_CATEGORY = 0;
-
 export default {
   name: 'Transactions',
-    components: {ImportTransactions, TransactionForm},
+    components: {ImportTransactions, TransactionForm, TransactionFilters},
     data: () => ({
     dialog: false,
     error: false,
@@ -197,56 +155,12 @@ export default {
     },
     categories: [],
     accounts: [],
-    editedItem: {},
-    editedFilters: {}
+    editedItem: {}
 }),
 
 computed: {
     formTitle () {
         return this.isEditing() ? 'Edit transaction' : 'New transaction'
-    },
-    categoryFilters () {
-        return [
-            {id: ID_NO_FILTER, text: '[All categories]'},
-            {id: ID_NO_CATEGORY, text: '[No category]', name: 'No category'},
-            ...this.categories
-        ];
-    },
-    accountFilters () {
-        return [
-            {id: ID_NO_FILTER, name: '[All accounts]'},
-            ...this.accounts
-        ];
-    },
-    filterDescription () {
-        const filters = [];
-        if(this.filters.category_id !== ID_NO_FILTER) {
-            filters.push({
-                ...this.categoryFilters.find(f => f.id === this.filters.category_id),
-                label: 'Category',
-                icon: 'category',
-                color: 'indigo'
-            });
-        }
-        if(this.filters.account_id !== ID_NO_FILTER) {
-            filters.push({
-                ...this.accountFilters.find(f => f.id === this.filters.account_id),
-                label: 'Account',
-                icon: 'account_balance',
-                color: 'orange'
-            });
-        }
-
-        if(this.filters.date_range && this.filters.date_range.length > 0) {
-            filters.push({
-                name: this.filters.date_range.join(' ~ '),
-                label: 'Date range',
-                icon: 'date_range',
-                color: 'yellow'
-            });
-        }
-
-        return filters;
     }
 },
 
@@ -317,11 +231,6 @@ methods: {
     },
     isEditing() {
         return this.editedItem.id;
-    },
-    applyFilters() {
-      this.filters.category_id = this.editedFilters.category_id;
-      this.filters.account_id = this.editedFilters.account_id;
-      this.filters.date_range = this.editedFilters.date_range;
     },
     getDataFromApi () {
         this.loading = true;

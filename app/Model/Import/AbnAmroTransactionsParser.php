@@ -31,21 +31,26 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
         });
     }
 
-    public function parse(File $file): array {
-        if($this->accountsByAccountNo == null) {
-            throw new \Exception("Cannot import with uninitialized importer. Call init() first");
-        }
-
+    public function parseFile(File $file): array {
         Log::info("Start importing ABN AMRO file", ["filename" => $file->getFilename(), "time" => new DateTime()]);
-        $transactions = [];
-        $numRows = 0;
 
         // Read file as CSV file
         $splFile = $file->openFile();
         $splFile->setFlags(SplFileObject::READ_CSV);
         $splFile->setCsvControl("\t");
 
-        foreach ($splFile as $idx => $row) {
+        return $this->parse($splFile);
+    }
+
+    public function parse(\Iterator $iterator): array {
+        $transactions = [];
+        $numRows = 0;
+
+        if($this->accountsByAccountNo == null) {
+            throw new \Exception("Cannot import with uninitialized importer. Call init() first");
+        }
+
+        foreach ($iterator as $idx => $row) {
             if (count($row) < 2) {
                 Log::debug("Skipping line #" . $idx . " as it contains only " . count($row) . " fields", $row);
                 continue;
@@ -99,6 +104,7 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
         Log::info("Recognized " . count($transactions) . " transactions from " . $numRows . " rows of CSV data");
 
         return $transactions;
+
     }
 
     private function getAccount(string $accountNo): ?Account {
@@ -159,40 +165,83 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
     {
         // See if the current description is formatted as a SEPA plain description
         if (preg_match('/^SEPA(.{28})/', $description, $matches)) {
-            $type = $matches[1];
-            $reference = '';
-            $name = '';
-            $newDescription = '';
-            $iban = '';
+            $type = trim($matches[1]);
 
-            // SEPA plain descriptions contain several key-value pairs, split by a colon
-            preg_match_all('/([A-Za-z]+(?=:\s)):\s([A-Za-z 0-9._#-]+(?=\s|$))/', $description, $matches, PREG_SET_ORDER);
-            if (is_array($matches)) {
-                foreach ($matches as $match) {
-                    $key   = $match[1];
-                    $value = trim($match[2]);
-                    switch (strtoupper($key)) {
-                        case 'OMSCHRIJVING':
-                            $newDescription = $value;
-                            break;
-                        case 'NAAM':
-                            $name = $value;
-                            break;
-                        case 'KENMERK':
-                            $reference = $value;
-                            break;
-                        case 'IBAN':
-                            $iban = $value;
-                            break;
-                        default: // @codeCoverageIgnore
-                            // Ignore the rest
-                    }
-                }
+            switch(strtolower($type)) {
+                case 'ideal':
+                    $parsed = $this->parseSepaDescriptionField($description, ["IBAN", "BIC", "Naam", "Omschrijving", "Kenmerk"]);
+                    break;
+                case 'incasso algemeen doorlopend':
+                case 'incasso algemeen eenmalig':
+                    $parsed = $this->parseSepaDescriptionField($description, ["Incassant", "Naam", "Machtiging", "Omschrijving", "IBAN", "Kenmerk", "Voor"]);
+                    break;
+                case 'overboeking':
+                case 'periodieke overb.':
+                    $parsed = $this->parseSepaDescriptionField($description, ["IBAN", "BIC", "Naam", "Omschrijving"]);
+                    break;
+                default:
+                    Log::warning("Sepa transfer found without known type: " . $type);
+                    return null;
             }
 
-            return $this->transactionInfo($newDescription || sprintf('%s - %s (%s)', $type, $name, $reference), $name, $iban);
+            return $this->transactionInfo($parsed["Naam"], $parsed["IBAN"], $type . " " . $parsed['Omschrijving']);
         }
         return null;
+    }
+
+    /**
+     * Parses the given list of fields from a SEPA description field. The SEPA description field seems to have
+     * a fixes set of field names in a string.
+     *
+     * @param string $description
+     * @param array $array
+     */
+    private function parseSepaDescriptionField(string $description, array $fields)
+    {
+        $parsed = [];
+        $start = $this->getValueStart($description, $fields[0]);
+
+        if($start == -1) {
+            Log::warning("Trying to parse SEPA description, but first field " . $fields[0] . " was not found", compact('description', 'fields'));
+            return [];
+        }
+
+        for($i = 0; $i < count($fields); $i++) {
+            $field = $fields[$i];
+
+            if($i < count($fields) -1) {
+                $next = $fields[$i + 1];
+                $nextpos = strpos($description, $next, $start);
+
+                // If the next field is not found, use the rest of the description
+                if($nextpos == -1) {
+                    Log::debug("Expected SEPA field " . $next . " was not found in description.", compact('description', 'next'));
+                    $value = substr($description, $start);
+                    $parsed[$field] = trim($value);
+
+                    // Stop parsing this description
+                    break;
+                } else {
+                    $value = substr($description, $start, $nextpos - $start - 1);
+                    $parsed[$field] = trim($value);
+                }
+
+                $start = $nextpos + strlen($next) + 1;
+            } else {
+                $value = substr($description, $start);
+                $parsed[$field] = trim($value);
+            }
+        }
+
+        Log::info("Parsed " . $description, $parsed);
+
+        return $parsed;
+    }
+
+    function getValueStart(string $description, string $field, int $offset = 0) {
+        $pos = strpos($description, $field, $offset);
+
+        return $pos >= 0 ? $pos + strlen($field) + 1 : -1;
     }
 
     /**
@@ -230,13 +279,18 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
                             $reference = $value;
                             break;
                         case 'TRTP':
-                            $type = $value;
+                            $type = trim(str_replace("SEPA", "", $value));
                             break;
                         default: // @codeCoverageIgnore
                             // Ignore the rest
                     }
                 }
-                return $this->transactionInfo($newDescription || sprintf('%s - %s (%s)', $type, $name, $reference), $name, $iban);
+
+                if(!$newDescription) {
+                    $newDescription = sprintf('%s (%s)', $name, $reference);
+                }
+
+                return $this->transactionInfo($name, $iban, $type . ' ' . $newDescription);
             }
         }
         return null;
@@ -262,6 +316,38 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
     private function getAccountNoFromIban(string $iban)
     {
         return substr($iban, -9);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAccountsByAccountNo()
+    {
+        return $this->accountsByAccountNo;
+    }
+
+    /**
+     * @param mixed $accountsByAccountNo
+     */
+    public function setAccountsByAccountNo($accountsByAccountNo): void
+    {
+        $this->accountsByAccountNo = $accountsByAccountNo;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTransferCategory()
+    {
+        return $this->transferCategory;
+    }
+
+    /**
+     * @param mixed $transferCategory
+     */
+    public function setTransferCategory($transferCategory): void
+    {
+        $this->transferCategory = $transferCategory;
     }
 
 

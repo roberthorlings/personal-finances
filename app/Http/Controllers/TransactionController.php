@@ -85,7 +85,7 @@ class TransactionController extends Controller
             return response()->json(null, 400);
         }
 
-        $transactions = $importer->parse($file);
+        $transactions = $importer->parseFile($file);
 
         if(!$request->get("dryRun")) {
             // Start importing

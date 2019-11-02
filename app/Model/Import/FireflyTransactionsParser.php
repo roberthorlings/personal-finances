@@ -33,7 +33,7 @@ class FireflyTransactionsParser implements TransactionFileParser {
         $this->accountsByIban = Account::get()->keyBy('iban');
     }
 
-    public function parse(File $file): array {
+    public function parseFile(File $file): array {
         if($this->categoriesByKey == null || $this->accountsByIban == null) {
             throw new \Exception("Cannot import with uninitialized importer. Call init() first");
         }

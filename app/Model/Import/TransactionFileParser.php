@@ -5,5 +5,5 @@ namespace App\Model\Import;
 use Symfony\Component\HttpFoundation\File\File;
 
 interface TransactionFileParser {
-    function parse(File $file): array;
+    function parseFile(File $file): array;
 }

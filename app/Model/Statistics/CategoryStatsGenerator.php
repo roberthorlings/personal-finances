@@ -2,8 +2,10 @@
 
 namespace App\Model\Statistics;
 
+use App\Model\Category;
 use App\Model\CategoryStats;
 use App\Model\Transaction;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class CategoryStatsGenerator {
@@ -32,34 +34,10 @@ class CategoryStatsGenerator {
 
         Log::debug("Retrieved " . count($transactions) . " transactions for summary statistics");
 
-        // Group transaction by account, year and month
-        $grouped = $transactions->groupBy([
-            'category_id',
-            function($transaction) { return intval(substr($transaction->date, 0, 4)); },
-            function($transaction) { return intval(substr($transaction->date, 5, 2)); },
-        ]);
+        // Load the tree of categories and
+        $categories = Category::get()->toTree();
 
-        // Compute total for each month
-        $stats = [];
-
-        foreach($grouped as $category_id => $perCategory) {
-            $count = 0;
-            foreach($perCategory as $year => $perYear) {
-                foreach($perYear as $month => $perMonth) {
-                    $stats[] = [
-                        'category_id' => $category_id ? $category_id : null,
-                        'year' => $year,
-                        'month' => $month,
-                        'amount' => $perMonth->sum('amount')
-                    ];
-                    $count++;
-                }
-            }
-
-            Log::debug("Stored " . $count . " stats for category #" . $category_id);
-        }
-
-        return $stats;
+        return $this->convertToStats($transactions, $categories)->toArray();
     }
 
     public function store(array $stats) {
@@ -68,5 +46,70 @@ class CategoryStatsGenerator {
 
     public function clear() {
         CategoryStats::truncate();
+    }
+
+    public function convertToStats(Collection $transactions, Collection $categories): Collection {
+        // Group transaction by account, year and month
+        $grouped = $transactions->groupBy([
+            function($transaction) { return intval(substr($transaction->date, 0, 4)); },
+            function($transaction) { return intval(substr($transaction->date, 5, 2)); },
+            'category_id',
+        ]);
+
+        // Compute total for each month
+        $stats = Collection::make();
+
+        $count = 0;
+        foreach($grouped as $year => $perYear) {
+            foreach($perYear as $month => $perMonth) {
+                // Create a map of totals per category
+                $categoryTotals = Collection::make($perMonth)->map(function($categoryStats) { return $categoryStats->sum('amount'); });
+
+                // Create stats entries, combining the category total with
+                // the totals of all descendants
+                $this->generateStatsEntries($stats, $year, $month, $categoryTotals, $categories);
+
+                // Also add an entry for transactions without category
+                if($categoryTotals->get("")) {
+                    $stats->add([
+                        'category_id' => null,
+                        'year' => $year,
+                        'month' => $month,
+                        'amount' => $categoryTotals->get(""),
+                        'grand_total' => $categoryTotals->get("")
+                    ]);
+                }
+            }
+        }
+
+        Log::debug("Generated " . $count . " stats");
+
+        return $stats;
+    }
+
+    private function generateStatsEntries(Collection $stats, int $year, int $month, Collection $categoryTotals, Collection $categories): float
+    {
+        $total = 0;
+        foreach($categories as $category) {
+            // First add all entries for the children of this category
+            $childTotal = $this->generateStatsEntries($stats, $year, $month,  $categoryTotals, $category->children);
+            $thisTotal = $categoryTotals->get($category->id, 0);
+
+            // Add a stats entry
+            if($thisTotal != 0 || $childTotal != 0) {
+                $stats->add([
+                    'category_id' => $category->id,
+                    'year' => $year,
+                    'month' => $month,
+                    'amount' => $thisTotal,
+                    'grand_total' => $thisTotal + $childTotal
+                ]);
+            }
+
+            // Update the grand total for this set of categories
+            $total += $childTotal + $thisTotal;
+        }
+
+        return $total;
     }
 }

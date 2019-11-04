@@ -77,7 +77,7 @@ class AccountController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function stats()
+    public function generateStats()
     {
         $generator = new AccountStatsGenerator();
         $stats = $generator->run();

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Account;
-use App\Model\Statistics\CategoryStatsGenerator;
-use Illuminate\Http\Request;
 use App\Model\Category;
+use App\Model\Statistics\CategoryStatsGenerator;
 use App\Resources\Category as CategoryResource;
+use App\Resources\CategoryStatsTree as CategoryStatsTreeResource;
 use App\Resources\CategoryTree as CategoryTreeResource;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
@@ -38,7 +39,7 @@ class CategoryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -51,7 +52,7 @@ class CategoryController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show(Category $category)
@@ -62,8 +63,8 @@ class CategoryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Category $category)
@@ -75,7 +76,7 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Category $category)
@@ -89,11 +90,26 @@ class CategoryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function stats()
+    public function generateStats()
     {
         $generator = new CategoryStatsGenerator();
         $stats = $generator->run();
 
         return response()->json(["numStats" => count($stats)], 201);
+    }
+
+    /**
+     * Returns a tree structure with summary statistics for all categories
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function stats(Request $request)
+    {
+        return CategoryStatsTreeResource::collection(
+            Category
+                ::withStats($request->get('year', null), $request->get('month', null))
+                ->get()
+                ->toTree()
+        );
     }
 }

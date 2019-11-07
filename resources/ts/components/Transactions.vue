@@ -114,7 +114,7 @@
         </v-data-table>
         <KeyboardShortcuts :shortcuts="keyboardShortcuts">
             <p class="text-right body-2 mt-2">
-                's, a' sorts on amount, 's, d' sort on date, 's, c' sorts on category name<br />
+                's, a' sorts on amount, 's, d' sort on date, 's, c' sorts on category name, 's u' sorts on date updated<br />
                 'f, c' filters on no category, 'f, a' shows all<br />
                 'd y' filters on this year, 'd m' filters on this month, 'd a' clears date filter<br />
                 'd, ,' navigates one month back, 'd, .' navigates one month ahead<br />
@@ -146,7 +146,7 @@
     import CategoriesApi from "../apis/categoriesApi";
     import AccountsApi from '../apis/accountsApi';
     import {toFlatList} from "../utils";
-    import KeyboardShortcuts from "./KeyboardShortcuts";
+    import KeyboardShortcuts from "./input/KeyboardShortcuts";
     import DateRange from "../DateRange";
 
     export default {
@@ -225,6 +225,7 @@
                 {sequence: ['s', 'a'], callback: () => this.applySort('amount')},
                 {sequence: ['s', 'c'], callback: () => this.applySort('category.name')},
                 {sequence: ['s', 'd'], callback: () => this.applySort('date')},
+                {sequence: ['s', 'u'], callback: () => this.applySort('updated_at')},
             ];
         },
 

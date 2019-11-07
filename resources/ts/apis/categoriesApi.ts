@@ -13,11 +13,23 @@ export interface Category extends Identifyable {
     updated_at: Date
 }
 
+export interface CategoryStat extends Identifyable {
+    category: Category,
+    subtotal: number,
+    total: string,
+    children?: CategoryStat[]
+};
+
 const tree = (): Promise<Category[]> =>
     axios.get(API_ENDPOINT + '/tree')
         .then(response => response.data.data);
 
+const stats = (): Promise<CategoryStat[]> =>
+    axios.get(API_ENDPOINT + '/stats')
+        .then(response => response.data.data);
+
 export default {
     ...genericWithStatsApi<Category>(API_ENDPOINT),
-    tree
+    tree,
+    stats
 };

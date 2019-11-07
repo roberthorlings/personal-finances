@@ -53,7 +53,7 @@
 
 </template>
 <script>
-    import DateRange from "../DateRange";
+    import DateRange from "../../DateRange";
 
     export default {
         name: 'DateRangeInput',

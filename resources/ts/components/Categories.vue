@@ -152,7 +152,7 @@
             },
             computeSummaryStats() {
                 this.loading = true;
-                return CategoriesApi.stats()
+                return CategoriesApi.generateStats()
                     .finally(() => {
                         this.loading = false;
                     });

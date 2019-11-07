@@ -289,7 +289,7 @@
             },
             computeSummaryStats() {
                 this.loading = true;
-                return TransactionsApi.stats()
+                return TransactionsApi.generateStats()
                     .finally(() => {
                         this.loading = false;
                     });

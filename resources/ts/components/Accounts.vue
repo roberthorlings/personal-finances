@@ -166,7 +166,7 @@
             },
             computeSummaryStats() {
                 this.loading = true;
-                return AccountsApi.stats()
+                return AccountsApi.generateStats()
                     .finally(() => {
                         this.loading = false;
                     });

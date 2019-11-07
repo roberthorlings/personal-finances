@@ -9,6 +9,9 @@ import VueRouter from 'vue-router';
 import vuetify from './vuetify';
 import routes from './routes';
 import './axios';
+import Highcharts from 'highcharts'
+import HighchartsVue from 'highcharts-vue'
+import drilldownInit from 'highcharts/modules/drilldown'
 
 /**
  * The following block of code may be used to automatically register your
@@ -21,7 +24,9 @@ import './axios';
 const files = require.context('./', true, /\.vue$/i);
 files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
+Vue.use(HighchartsVue);
+drilldownInit(Highcharts);
 
 // Create the router instance and pass the `routes` option
 const router = new VueRouter({routes});

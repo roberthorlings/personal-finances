@@ -1,6 +1,7 @@
 import {Identifyable} from "./genericApi";
 import axios from "axios";
 import genericWithStatsApi from "./genericWithStatsApi";
+import {CategoryStat} from "../types";
 
 const API_ENDPOINT = '/api/categories';
 
@@ -13,19 +14,17 @@ export interface Category extends Identifyable {
     updated_at: Date
 }
 
-export interface CategoryStat extends Identifyable {
-    category: Category,
-    subtotal: number,
-    total: string,
-    children?: CategoryStat[]
-};
+export interface CategoryStatsParams {
+    year?:  number,
+    month?: number
+}
 
 const tree = (): Promise<Category[]> =>
     axios.get(API_ENDPOINT + '/tree')
         .then(response => response.data.data);
 
-const stats = (): Promise<CategoryStat[]> =>
-    axios.get(API_ENDPOINT + '/stats')
+const stats = (params?: CategoryStatsParams): Promise<CategoryStat[]> =>
+    axios.get(API_ENDPOINT + '/stats', {params})
         .then(response => response.data.data);
 
 export default {

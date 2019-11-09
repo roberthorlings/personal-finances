@@ -21,7 +21,8 @@ class RuleEngine
                 'electronica' => [ 'coolblue', 'robbbshop'    ],
                 'speciaalzaken' => [ 'castellum houten', 'slagerij', 'bakkerij', 'kaasspecialist', 'gelderblom', 'Pour Certain'],
                 'hellofresh' => ['hellofresh'],
-                'benzine' => ['esso', 'tango', 'shell', 'total', 'BP']
+                'benzine' => ['esso', 'tango', 'shell', 'total', 'BP'],
+                'rendement' => ['creditrente']
             ]
         ];
     }

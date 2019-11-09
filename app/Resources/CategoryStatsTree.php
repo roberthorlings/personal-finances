@@ -2,9 +2,6 @@
 
 namespace App\Resources;
 
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Collection;
-
 class CategoryStatsTree extends Category
 {
     /**

@@ -2289,7 +2289,21 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _containers_CategoryPieChart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./containers/CategoryPieChart */ "./resources/ts/components/containers/CategoryPieChart.vue");
+/* harmony import */ var _containers_CategoryBarChart__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./containers/CategoryBarChart */ "./resources/ts/components/containers/CategoryBarChart.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2305,8 +2319,79 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'Home',
+  data: function data() {
+    return {
+      year: null,
+      month: null,
+      years: [{
+        text: 'all years',
+        value: null
+      }, {
+        text: '2015',
+        value: 2015
+      }, {
+        text: '2016',
+        value: 2016
+      }, {
+        text: '2017',
+        value: 2017
+      }, {
+        text: '2018',
+        value: 2018
+      }, {
+        text: '2019',
+        value: 2019
+      }, {
+        text: '2020',
+        value: 2020
+      }, {
+        text: '2021',
+        value: 2021
+      }],
+      months: [{
+        text: 'all months',
+        value: null
+      }, {
+        text: 'January',
+        value: 1
+      }, {
+        text: 'February',
+        value: 2
+      }, {
+        text: 'March',
+        value: 3
+      }, {
+        text: 'April',
+        value: 4
+      }, {
+        text: 'May',
+        value: 5
+      }, {
+        text: 'June',
+        value: 6
+      }, {
+        text: 'July',
+        value: 7
+      }, {
+        text: 'August',
+        value: 8
+      }, {
+        text: 'September',
+        value: 9
+      }, {
+        text: 'October',
+        value: 10
+      }, {
+        text: 'November',
+        value: 11
+      }, {
+        text: 'December',
+        value: 12
+      }]
+    };
+  },
   components: {
-    CategoryPieChart: _containers_CategoryPieChart__WEBPACK_IMPORTED_MODULE_0__["default"]
+    CategoryBarChart: _containers_CategoryBarChart__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
 });
 
@@ -3261,9 +3346,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/containers/CategoryPieChart.vue?vue&type=script&lang=js&":
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/containers/CategoryBarChart.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./resources/ts/components/containers/CategoryPieChart.vue?vue&type=script&lang=js& ***!
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./resources/ts/components/containers/CategoryBarChart.vue?vue&type=script&lang=js& ***!
   \**********************************************************************************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -3273,15 +3358,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _apis_categoriesApi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../apis/categoriesApi */ "./resources/ts/apis/categoriesApi.ts");
+/* harmony import */ var _charts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../charts */ "./resources/ts/charts.ts");
 
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
-
-function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
@@ -3300,8 +3378,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'CategoryBarChart',
@@ -3309,7 +3386,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     options: function options() {
       return {
         chart: {
-          type: 'pie'
+          type: 'column'
         },
         title: {
           text: this.title
@@ -3317,12 +3394,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         subtitle: {
           text: 'Click the slices to drill down'
         },
-        plotOptions: {
-          series: {
-            dataLabels: {
-              enabled: true,
-              format: '{point.name}: €{point.y:,.0f}'
-            }
+        plotOptions: {},
+        xAxis: {
+          type: 'category',
+          crosshair: true
+        },
+        yAxis: {
+          title: {
+            text: 'Uitgaven (€)'
           }
         },
         tooltip: {
@@ -3345,110 +3424,73 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       drilldownSeries: []
     };
   },
-  mounted: function () {
-    var _mounted = _asyncToGenerator(
-    /*#__PURE__*/
-    _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-      var stats, _this$convertStatsToS, initialSerie, drilldownSeries;
-
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-        while (1) {
-          switch (_context.prev = _context.next) {
-            case 0:
-              _context.prev = 0;
-              _context.next = 3;
-              return _apis_categoriesApi__WEBPACK_IMPORTED_MODULE_1__["default"].stats();
-
-            case 3:
-              stats = _context.sent;
-              _this$convertStatsToS = this.convertStatsToSeriesData(stats), initialSerie = _this$convertStatsToS.initialSerie, drilldownSeries = _this$convertStatsToS.drilldownSeries;
-              this.series = [_objectSpread({}, initialSerie, {
-                colorByPoint: true
-              })];
-              this.drilldownSeries = drilldownSeries;
-              this.loading = false;
-              _context.next = 13;
-              break;
-
-            case 10:
-              _context.prev = 10;
-              _context.t0 = _context["catch"](0);
-              console.error(_context.t0);
-
-            case 13:
-            case "end":
-              return _context.stop();
-          }
-        }
-      }, _callee, this, [[0, 10]]);
-    }));
-
-    function mounted() {
-      return _mounted.apply(this, arguments);
-    }
-
-    return mounted;
-  }(),
+  mounted: function mounted() {
+    this.updateData();
+  },
   methods: {
-    convertStatsToSeriesData: function convertStatsToSeriesData(stats) {
-      var includedStats = stats.filter(function (stat) {
-        return stat.total < 0;
-      });
-      var series = this.convertStatsToDrilldownData({
-        id: 0,
-        name: 'Uitgaven'
-      }, includedStats);
-      var rootSerie = series.find(function (serie) {
-        return serie.id === 0;
-      });
-      return {
-        initialSerie: rootSerie,
-        drilldownSeries: series.filter(function (serie) {
-          return serie && serie.id != rootSerie.id;
-        })
-      };
+    updateData: function () {
+      var _updateData = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var stats, _convertStatsToSeries, initialSerie, drilldownSeries;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                this.loading = true;
+                _context.prev = 1;
+                _context.next = 4;
+                return _apis_categoriesApi__WEBPACK_IMPORTED_MODULE_1__["default"].stats({
+                  year: this.year || undefined,
+                  month: this.month || undefined
+                });
+
+              case 4:
+                stats = _context.sent;
+                _convertStatsToSeries = Object(_charts__WEBPACK_IMPORTED_MODULE_2__["convertStatsToSeriesData"])(stats), initialSerie = _convertStatsToSeries.initialSerie, drilldownSeries = _convertStatsToSeries.drilldownSeries;
+                this.series = [_objectSpread({}, initialSerie, {
+                  colorByPoint: true
+                })];
+                this.drilldownSeries = drilldownSeries;
+                this.loading = false;
+                _context.next = 14;
+                break;
+
+              case 11:
+                _context.prev = 11;
+                _context.t0 = _context["catch"](1);
+                console.error(_context.t0);
+
+              case 14:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[1, 11]]);
+      }));
+
+      function updateData() {
+        return _updateData.apply(this, arguments);
+      }
+
+      return updateData;
+    }()
+  },
+  props: {
+    year: {
+      type: Number
     },
-    convertStatsToDrilldownData: function convertStatsToDrilldownData(_ref) {
-      var _this = this;
-
-      var id = _ref.id,
-          name = _ref.name;
-      var children = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-      var subtotal = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-      var drilldownSeries = [];
-
-      if (children.length == 0) {
-        return [];
-      } // Add drilldown series for children, if they have children as well
-
-
-      children.forEach(function (child) {
-        drilldownSeries.push.apply(drilldownSeries, _toConsumableArray(_this.convertStatsToDrilldownData(child.category, child.children, child.subtotal)));
-      }); // Generate a drilldownserie for this node
-
-      var data = children.map(function (stat) {
-        var hasChildren = stat.children && stat.children.length > 0;
-        return {
-          name: stat.category.name + (hasChildren ? ' (+)' : ''),
-          y: Math.abs(stat.total),
-          drilldown: hasChildren ? stat.category.id : null
-        };
-      }); // If the subtotal for this node is non zero, add it as well
-
-      if (subtotal != 0) {
-        data.push({
-          name: 'Overig',
-          y: Math.abs(subtotal)
-        });
-      } // Add a drilldownserie for the current node
-
-
-      drilldownSeries.push({
-        id: id,
-        name: name,
-        data: data
-      });
-      return drilldownSeries;
+    month: {
+      type: Number
+    }
+  },
+  watch: {
+    year: function year() {
+      this.updateData();
+    },
+    month: function month() {
+      this.updateData();
     }
   }
 });
@@ -8617,20 +8659,80 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("p", [
-      _vm._v(
-        "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error quibusdam, non molestias et! Earum magnam,\n        similique, quo recusandae placeat dicta asperiores modi sint ea repudiandae maxime? Quae non explicabo,\n        neque."
+  return _c(
+    "div",
+    [
+      _c(
+        "v-container",
+        { attrs: { fluid: "" } },
+        [
+          _c(
+            "v-row",
+            [
+              _c(
+                "v-col",
+                { attrs: { sm: "3", xs: "12" } },
+                [
+                  _c("v-select", {
+                    attrs: { items: _vm.years, label: "Year" },
+                    model: {
+                      value: _vm.year,
+                      callback: function($$v) {
+                        _vm.year = $$v
+                      },
+                      expression: "year"
+                    }
+                  })
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-col",
+                { attrs: { sm: "3", xs: "12" } },
+                [
+                  _c("v-select", {
+                    attrs: { items: _vm.months, label: "Month" },
+                    model: {
+                      value: _vm.month,
+                      callback: function($$v) {
+                        _vm.month = $$v
+                      },
+                      expression: "month"
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "v-row",
+            [
+              _c(
+                "v-col",
+                {
+                  staticStyle: { "max-height": "400px" },
+                  attrs: { cols: "12" }
+                },
+                [
+                  _c("category-bar-chart", {
+                    attrs: { year: _vm.year, month: _vm.month }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
       )
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticStyle: { "max-height": "400px" } },
-      [_c("category-pie-chart")],
-      1
-    )
-  ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -9780,9 +9882,9 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/containers/CategoryPieChart.vue?vue&type=template&id=ad14a648&":
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/containers/CategoryBarChart.vue?vue&type=template&id=03586b96&":
 /*!**************************************************************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./resources/ts/components/containers/CategoryPieChart.vue?vue&type=template&id=ad14a648& ***!
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib??vue-loader-options!./resources/ts/components/containers/CategoryBarChart.vue?vue&type=template&id=03586b96& ***!
   \**************************************************************************************************************************************************************************************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -9795,16 +9897,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "container" },
-    [
-      !_vm.loading
-        ? _c("highcharts", { attrs: { options: _vm.options } })
-        : _vm._e()
-    ],
-    1
-  )
+  return !_vm.loading
+    ? _c("highcharts", { attrs: { options: _vm.options } })
+    : _vm._e()
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -62041,7 +62136,7 @@ var map = {
 	"./components/TransactionFilters.vue": "./resources/ts/components/TransactionFilters.vue",
 	"./components/TransactionForm.vue": "./resources/ts/components/TransactionForm.vue",
 	"./components/Transactions.vue": "./resources/ts/components/Transactions.vue",
-	"./components/containers/CategoryPieChart.vue": "./resources/ts/components/containers/CategoryPieChart.vue",
+	"./components/containers/CategoryBarChart.vue": "./resources/ts/components/containers/CategoryBarChart.vue",
 	"./components/input/DatePickerInput.vue": "./resources/ts/components/input/DatePickerInput.vue",
 	"./components/input/DateRangeInput.vue": "./resources/ts/components/input/DateRangeInput.vue",
 	"./components/input/KeyboardShortcuts.vue": "./resources/ts/components/input/KeyboardShortcuts.vue"
@@ -62151,13 +62246,12 @@ var __assign = (undefined && undefined.__assign) || function () {
 
 
 var API_ENDPOINT = '/api/categories';
-;
 var tree = function () {
     return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(API_ENDPOINT + '/tree')
         .then(function (response) { return response.data.data; });
 };
-var stats = function () {
-    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(API_ENDPOINT + '/stats')
+var stats = function (params) {
+    return axios__WEBPACK_IMPORTED_MODULE_0___default.a.get(API_ENDPOINT + '/stats', { params: params })
         .then(function (response) { return response.data.data; });
 };
 /* harmony default export */ __webpack_exports__["default"] = (__assign(__assign({}, Object(_genericWithStatsApi__WEBPACK_IMPORTED_MODULE_1__["default"])(API_ENDPOINT)), { tree: tree,
@@ -62413,6 +62507,73 @@ if (token) {
 } else {
   console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
 }
+
+/***/ }),
+
+/***/ "./resources/ts/charts.ts":
+/*!********************************!*\
+  !*** ./resources/ts/charts.ts ***!
+  \********************************/
+/*! exports provided: convertStatsToDrilldownData, convertStatsToSeriesData */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertStatsToDrilldownData", function() { return convertStatsToDrilldownData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "convertStatsToSeriesData", function() { return convertStatsToSeriesData; });
+var convertStatsToDrilldownData = function (_a, children, subtotal) {
+    var id = _a.id, name = _a.name;
+    if (children === void 0) { children = []; }
+    if (subtotal === void 0) { subtotal = 0; }
+    var drilldownSeries = [];
+    if (children.length == 0) {
+        return [];
+    }
+    // Add drilldown series for children, if they have children as well
+    children.forEach(function (child) {
+        drilldownSeries.push.apply(drilldownSeries, convertStatsToDrilldownData(child.category, child.children, child.subtotal));
+    });
+    // Generate a drilldownserie for this node
+    var data = children.map(function (stat) {
+        var hasChildren = stat.children && stat.children.length > 0;
+        // Skip this category if there is no amount
+        if (Math.round(stat.total) == 0) {
+            return undefined;
+        }
+        return {
+            name: stat.category.name,
+            y: stat.total,
+            drilldown: hasChildren ? stat.category.id : null
+        };
+    });
+    // If the subtotal for this node is non zero, add it as well
+    if (subtotal != 0) {
+        data.push({
+            name: 'Overig',
+            y: subtotal,
+        });
+    }
+    // Ensure that there are no undefined values in the list
+    // See https://codereview.stackexchange.com/a/138289
+    var validData = data.filter(function (s) { return s !== undefined; });
+    // Add a drilldownserie for the current node
+    drilldownSeries.push({
+        id: id,
+        name: name,
+        data: validData.sort(function (a, b) { return (Math.abs(b.y) - Math.abs(a.y)); })
+    });
+    return drilldownSeries;
+};
+var convertStatsToSeriesData = function (stats) {
+    var includedStats = stats; // .filter(stat => stat.total < 0);
+    var series = convertStatsToDrilldownData({ id: 0, name: 'Uitgaven' }, includedStats);
+    var rootSerie = series.find(function (serie) { return serie.id === 0; });
+    return {
+        initialSerie: rootSerie,
+        drilldownSeries: series.filter(function (serie) { return serie && (!rootSerie || serie.id != rootSerie.id); })
+    };
+};
+
 
 /***/ }),
 
@@ -62707,6 +62868,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Home_vue_vue_type_template_id_7043a300___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Home.vue?vue&type=template&id=7043a300& */ "./resources/ts/components/Home.vue?vue&type=template&id=7043a300&");
 /* harmony import */ var _Home_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Home.vue?vue&type=script&lang=js& */ "./resources/ts/components/Home.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony import */ var _node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vuetify-loader/lib/runtime/installComponents.js */ "./node_modules/vuetify-loader/lib/runtime/installComponents.js");
+/* harmony import */ var _node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuetify/lib/components/VGrid */ "./node_modules/vuetify/lib/components/VGrid/index.js");
+/* harmony import */ var vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! vuetify/lib/components/VSelect */ "./node_modules/vuetify/lib/components/VSelect/index.js");
 
 
 
@@ -62724,6 +62889,15 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
   null
   
 )
+
+/* vuetify-loader */
+
+
+
+
+
+_node_modules_vuetify_loader_lib_runtime_installComponents_js__WEBPACK_IMPORTED_MODULE_3___default()(component, {VCol: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_4__["VCol"],VContainer: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_4__["VContainer"],VRow: vuetify_lib_components_VGrid__WEBPACK_IMPORTED_MODULE_4__["VRow"],VSelect: vuetify_lib_components_VSelect__WEBPACK_IMPORTED_MODULE_5__["VSelect"]})
+
 
 /* hot reload */
 if (false) { var api; }
@@ -63245,17 +63419,17 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/ts/components/containers/CategoryPieChart.vue":
+/***/ "./resources/ts/components/containers/CategoryBarChart.vue":
 /*!*****************************************************************!*\
-  !*** ./resources/ts/components/containers/CategoryPieChart.vue ***!
+  !*** ./resources/ts/components/containers/CategoryBarChart.vue ***!
   \*****************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _CategoryPieChart_vue_vue_type_template_id_ad14a648___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CategoryPieChart.vue?vue&type=template&id=ad14a648& */ "./resources/ts/components/containers/CategoryPieChart.vue?vue&type=template&id=ad14a648&");
-/* harmony import */ var _CategoryPieChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CategoryPieChart.vue?vue&type=script&lang=js& */ "./resources/ts/components/containers/CategoryPieChart.vue?vue&type=script&lang=js&");
+/* harmony import */ var _CategoryBarChart_vue_vue_type_template_id_03586b96___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CategoryBarChart.vue?vue&type=template&id=03586b96& */ "./resources/ts/components/containers/CategoryBarChart.vue?vue&type=template&id=03586b96&");
+/* harmony import */ var _CategoryBarChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CategoryBarChart.vue?vue&type=script&lang=js& */ "./resources/ts/components/containers/CategoryBarChart.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -63265,9 +63439,9 @@ __webpack_require__.r(__webpack_exports__);
 /* normalize component */
 
 var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _CategoryPieChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _CategoryPieChart_vue_vue_type_template_id_ad14a648___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _CategoryPieChart_vue_vue_type_template_id_ad14a648___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  _CategoryBarChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CategoryBarChart_vue_vue_type_template_id_03586b96___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CategoryBarChart_vue_vue_type_template_id_03586b96___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -63277,38 +63451,38 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
 
 /* hot reload */
 if (false) { var api; }
-component.options.__file = "resources/ts/components/containers/CategoryPieChart.vue"
+component.options.__file = "resources/ts/components/containers/CategoryBarChart.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 
-/***/ "./resources/ts/components/containers/CategoryPieChart.vue?vue&type=script&lang=js&":
+/***/ "./resources/ts/components/containers/CategoryBarChart.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************!*\
-  !*** ./resources/ts/components/containers/CategoryPieChart.vue?vue&type=script&lang=js& ***!
+  !*** ./resources/ts/components/containers/CategoryBarChart.vue?vue&type=script&lang=js& ***!
   \******************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryPieChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vuetify-loader/lib/loader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./CategoryPieChart.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/containers/CategoryPieChart.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryPieChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryBarChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vuetify-loader/lib/loader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./CategoryBarChart.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/containers/CategoryBarChart.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryBarChart_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
 
 /***/ }),
 
-/***/ "./resources/ts/components/containers/CategoryPieChart.vue?vue&type=template&id=ad14a648&":
+/***/ "./resources/ts/components/containers/CategoryBarChart.vue?vue&type=template&id=03586b96&":
 /*!************************************************************************************************!*\
-  !*** ./resources/ts/components/containers/CategoryPieChart.vue?vue&type=template&id=ad14a648& ***!
+  !*** ./resources/ts/components/containers/CategoryBarChart.vue?vue&type=template&id=03586b96& ***!
   \************************************************************************************************/
 /*! exports provided: render, staticRenderFns */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryPieChart_vue_vue_type_template_id_ad14a648___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vuetify-loader/lib/loader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./CategoryPieChart.vue?vue&type=template&id=ad14a648& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/containers/CategoryPieChart.vue?vue&type=template&id=ad14a648&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryPieChart_vue_vue_type_template_id_ad14a648___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryBarChart_vue_vue_type_template_id_03586b96___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vuetify-loader/lib/loader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./CategoryBarChart.vue?vue&type=template&id=03586b96& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vuetify-loader/lib/loader.js!./node_modules/vue-loader/lib/index.js?!./resources/ts/components/containers/CategoryBarChart.vue?vue&type=template&id=03586b96&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryBarChart_vue_vue_type_template_id_03586b96___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryPieChart_vue_vue_type_template_id_ad14a648___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vuetify_loader_lib_loader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_CategoryBarChart_vue_vue_type_template_id_03586b96___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

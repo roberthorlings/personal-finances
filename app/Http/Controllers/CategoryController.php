@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Model\Category;
 use App\Model\Statistics\CategoryStatsGenerator;
 use App\Resources\Category as CategoryResource;
+use App\Resources\CategoryStats as CategoryStatsResource;
 use App\Resources\CategoryStatsTree as CategoryStatsTreeResource;
 use App\Resources\CategoryTree as CategoryTreeResource;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -110,6 +110,20 @@ class CategoryController extends Controller
                 ::withStats($request->get('year', null), $request->get('month', null))
                 ->get()
                 ->toTree()
+        );
+    }
+
+    /**
+     * Returns the statistics for a certain category in the given period
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function categoryStats(int $category, Request $request)
+    {
+        return new CategoryStatsResource(
+            Category
+                ::withStats($request->get('year', null), $request->get('month', null))
+                ->findOrFail($category)
         );
     }
 }

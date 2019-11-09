@@ -23,6 +23,7 @@ Route::post('/transactions/stats', 'TransactionController@generateStats');
 Route::post('/accounts/stats', 'AccountController@generateStats');
 Route::post('/categories/stats', 'CategoryController@generateStats');
 Route::get('/categories/stats', 'CategoryController@stats');
+Route::get('/categories/{category}/stats', 'CategoryController@categoryStats');
 Route::apiResource('categories', 'CategoryController');
 Route::apiResource('accounts', 'AccountController');
 Route::apiResource('transactions', 'TransactionController');

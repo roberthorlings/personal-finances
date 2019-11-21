@@ -14,21 +14,30 @@ export interface Category extends Identifyable {
     updated_at: Date
 }
 
-export interface CategoryStatsParams {
+export interface StatsParams {
     year?:  number,
     month?: number
+}
+
+export interface CategoryStatsParams extends StatsParams {
+    category: number,
 }
 
 const tree = (): Promise<Category[]> =>
     axios.get(API_ENDPOINT + '/tree')
         .then(response => response.data.data);
 
-const stats = (params?: CategoryStatsParams): Promise<CategoryStat[]> =>
+const stats = (params?: StatsParams): Promise<CategoryStat[]> =>
     axios.get(API_ENDPOINT + '/stats', {params})
+        .then(response => response.data.data);
+
+const categoryStats = (params: CategoryStatsParams): Promise<CategoryStat[]> =>
+    axios.get(API_ENDPOINT + '/' + params.category + '/stats', {params})
         .then(response => response.data.data);
 
 export default {
     ...genericWithStatsApi<Category>(API_ENDPOINT),
     tree,
-    stats
+    stats,
+    categoryStats
 };

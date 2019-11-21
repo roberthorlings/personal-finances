@@ -23,7 +23,8 @@
                     children: [
                         {icon: 'category', text: 'Categories', to: '/categories'},
                         {icon: 'account_balance', text: 'Accounts', to: '/accounts'},
-                        {icon: 'money', text: 'Transactions', to: '/transactions'}
+                        {icon: 'money', text: 'Transactions', to: '/transactions'},
+                        {icon: 'bar_chart', text: 'Reports', to: '/reports'}
                     ],
                 }
             ],

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-    import CategoryBarChart from "./containers/CategoryBarChart";
+    import CategoryBarChart from "./charts/CategoryBarChart";
     export default {
         name: 'Home',
         data: () => ({

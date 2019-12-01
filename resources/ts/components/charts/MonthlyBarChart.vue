@@ -2,38 +2,39 @@
     <generic-bar-chart
         :title="title"
         :series="series"
-        :drilldown-series="drilldownSeries"
         :legend="legend"
         :height="height"
     />
 </template>
 
 <script>
-    import categoriesApi from "../../apis/categoriesApi";
-    import {convertCategoryStatsToSeriesData} from "../../charts";
+    import { convertSingleStatsToSeriesData} from "../../charts";
     import GenericBarChart from "./GenericBarChart";
 
     export default {
-        name: 'CategoryBarChart',
+        name: 'MonthlyBarChart',
         components: {GenericBarChart},
         data: () => ({
             series: [],
-            drilldownSeries: []
         }),
         mounted() {
             this.parseStats();
         },
         methods: {
-            parseStats: async function() {
-              const {initialSerie, drilldownSeries} = convertCategoryStatsToSeriesData(this.stats);
-
-              this.series = [{...initialSerie, colorByPoint: true}];
-              this.drilldownSeries = drilldownSeries;
+            parseStats: function() {
+              if(!this.stats || !this.stats.category) {
+                  this.series = [];
+              } else {
+                  this.series = [{
+                      name: this.stats.category.name,
+                      data: convertSingleStatsToSeriesData(this.stats.stats)
+                  }];
+              }
           }
         },
         props: {
             title: { type: String },
-            stats: { type: Array },
+            stats: { type: Object },
             legend: { type: Boolean, default: true },
             height: { type: Number }
         },

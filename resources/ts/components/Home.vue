@@ -11,12 +11,12 @@
             </v-row>
             <v-row>
                 <v-col cols="12"  style="max-height: 400px;">
-                    <category-bar-chart
-                        :year="year"
-                        :month="month"
-                    >
-
-                    </category-bar-chart>
+                    <with-stats :year="year" :month="month" v-slot="slotProps">
+                        <category-bar-chart
+                            :stats="slotProps.stats"
+                            :title="title"
+                        />
+                    </with-stats>
                 </v-col>
             </v-row>
         </v-container>
@@ -26,9 +26,12 @@
 
 <script>
     import CategoryBarChart from "./charts/CategoryBarChart";
+    import WithStats from "./WithStats";
+
     export default {
         name: 'Home',
         data: () => ({
+            title: 'Inkomsten en uitgaven',
             year: null,
             month: null,
             years: [
@@ -58,6 +61,6 @@
             ]
 
         }),
-        components: {CategoryBarChart}
+        components: {CategoryBarChart, WithStats}
     }
 </script>

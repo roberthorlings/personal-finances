@@ -1,4 +1,4 @@
-import {CategoryStat} from "./types";
+import {CategoryStat, SingleStat} from "./types";
 
 export interface CategoryDescription {
     id: number,
@@ -61,14 +61,23 @@ export const convertStatsToDrilldownData = ({id, name}: CategoryDescription, chi
     return drilldownSeries;
 };
 
-export const convertStatsToSeriesData = (stats: CategoryStat[]) => {
-    const includedStats = stats; // .filter(stat => stat.total < 0);
+export const convertCategoryStatsToSeriesData = (stats: CategoryStat[]) => {
+    const includedStats = stats;
 
-    const series = convertStatsToDrilldownData({id: 0, name: 'Uitgaven'}, includedStats);
+    const series = convertStatsToDrilldownData({id: 0, name: 'All'}, includedStats);
     const rootSerie = series.find(serie => serie.id === 0);
 
     return {
         initialSerie: rootSerie,
         drilldownSeries: series.filter(serie => serie && (!rootSerie || serie.id != rootSerie.id))
     }
+};
+
+export const convertSingleStatsToSeriesData = (stats: SingleStat[]): ChartSerieEntry[] => {
+    return stats
+        .sort((a, b) => a.year !== b.year ? (a.year - b.year) : (a.month - b.month))
+        .map(stat => ({
+           name: new Date(stat.year, stat.month - 1, 1).toLocaleString('default', { month: 'long', year: 'numeric'}),
+           y: stat.total
+        }));
 };

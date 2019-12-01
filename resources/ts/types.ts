@@ -12,3 +12,10 @@ export interface CategoryStat extends Identifyable {
     total: number,
     children?: CategoryStat[]
 };
+
+export interface SingleStat {
+    month: number,
+    year: number,
+    subtotal: number,
+    total: number,
+};

@@ -1,81 +1,82 @@
 <template>
-    <highcharts
-        v-if="!loading"
+    <generic-bar-chart
+        :title="title"
+        :series="series"
+        :legend="true"
+        :height="height"
         :options="options"
     />
 </template>
 
 <script>
     import categoriesApi from "../../apis/categoriesApi";
-    import {convertStatsToSeriesData} from "../../charts";
+    import GenericBarChart from "./GenericBarChart";
 
     export default {
         name: 'IncomeExpensesChart',
-        computed: {
-            options() {
-                return {
-                    chart: {
-                        type: 'column'
-                    },
-                    title: {
-                        text: this.title,
-                    },
-                    plotOptions: {
-                    },
-                    xAxis: {
-                        type: 'category',
-                        crosshair: true
-                    },
-                    legend: {
-                        enabled: false
-                    },
-                    yAxis: {
-                        title: {
-                            text: 'Amount (€)'
-                        }
-                    },
-                    tooltip: {
-                        headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                        pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>€{point.y:,.0f}</b><br/>'
-                    },
-                    series: this.series,
+        components: {GenericBarChart},
+        data: () => ({
+            series: [],
+            options: {
+                chart: {
+                    type: 'bar'
+                },
+                tooltip: {
+                    headerFormat: '{series.name} {point.key}<br />',
+                    pointFormat: '€{point.y:,.0f}'
                 }
             }
-        },
-
-        data: () => ({
-            loading: true,
-            chartdata: null,
-            series: []
         }),
         mounted () {
-            this.updateData();
+            this.loadStats();
         },
         methods: {
-          updateData: async function() {
-              this.loading = true;
-              try {
-                  const stats = await categoriesApi.stats({
-                      year: this.year || undefined,
-                      month: this.month || undefined
-                  });
+            loadStats: async function() {
+                const stats = await Promise.all(
+                    this.topLevelCategories
+                        // Load statistics
+                        .map(cat => this.loadCategoryStats(cat.id))
+                );
 
-                  // We are only interested in top-level categories
-                  const topLevelStats = stats.map(stat => ({...stat, children: []}));
-                  const {initialSerie} = convertStatsToSeriesData(topLevelStats);
+                const perYear = stats
+                    // Combine all stats
+                    .flatMap(categoryStats => categoryStats.stats)
 
-                  // Make sure to merge any category other than income or expenses
-                  const mergedSerie = {
-                      ...initialSerie,
-                      data: this.mergeCategories(initialSerie.data)
-                  };
+                    // Group by year
+                    .reduce((acc, val) => {
+                        if(!acc[val.year])
+                            acc[val.year] = [];
 
-                  this.series = [{...mergedSerie, colorByPoint: true}];
-                  this.loading = false
-              } catch (e) {
-                  console.error(e)
-              }
-          },
+                        acc[val.year].push(val);
+                        return acc;
+                    }, {});
+
+                // Merge categories within a year
+                const combinedPerYear = Object.assign({}, ...Object.keys(perYear).map(year => ({[year]: this.mergeCategories(perYear[year])})));
+
+                // Create actual series
+                this.series = [
+                    {
+                        name: "Income",
+                        color: 'rgb(144, 237, 125)',
+                        data: Object.keys(combinedPerYear).map(year => ({
+                            name: year,
+                            y: combinedPerYear[year].income
+                        }))
+                    },
+                    {
+                        name: "Expenses",
+                        color: 'rgb(244, 91, 91)',
+                        data: Object.keys(combinedPerYear).map(year => ({
+                            name: year,
+                            y: Math.abs(combinedPerYear[year].expenses)
+                        }))
+                    }
+                ];
+            },
+            loadCategoryStats: async function(category) {
+                return categoriesApi.categoryStats({category});
+            },
           mergeCategories: function(data) {
               const initial = {
                   income: 0,
@@ -91,30 +92,18 @@
                           expenses: total.expenses + currentValue
                       });
 
-              const merged = data
-                  .map(point => point.y)
+              return data
+                  .map(point => point.total)
                   .reduce(reducer, initial);
-              console.log({data, merged});
-              return [
-                  {
-                      name: "Inkomsten",
-                      y: merged.income
-                  },
-                  {
-                      name: "Uitgaven",
-                      y: Math.abs(merged.expenses)
-                  }
-              ];
           }
         },
         props: {
             title: { type: String },
-            year: { type: Number },
-            month: { type: Number }
+            topLevelCategories: { type: Array, default: [] },
+            height: { type: Number }
         },
         watch: {
-            year: function() { this.updateData(); },
-            month: function() { this.updateData(); }
+            topLevelCategories: function() { this.loadStats(); }
         }
     }
 </script>

@@ -30,14 +30,16 @@ class CategoryStats extends Category
 
         return $stats
             ->filter(function(\App\Model\CategoryStats $stat) {
-                return round($stat->amount, 2) != 0;
+                // Only include stats where subtotal or grandtotal is not 0
+                return round($stat->getSubtotal(), 2) != 0 || round($stat->getGrandTotal(), 2) != 0;
             })
             ->values()
             ->map(function(\App\Model\CategoryStats $stat) {
                 return [
                     'month' => $stat->month,
                     'year' => $stat->year,
-                    'amount' => round($stat->amount, 2)
+                    'subtotal' => round($stat->getSubtotal(), 2),
+                    'total' => round($stat->getGrandTotal(), 2),
                 ];
             });
     }

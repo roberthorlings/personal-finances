@@ -11,4 +11,7 @@ class CategoryStats extends Model
     public function category() {
         return $this->belongsTo('App\Model\Category');
     }
+
+    public function getGrandTotal() { return $this->grand_total; }
+    public function getSubtotal() { return $this->amount; }
 }

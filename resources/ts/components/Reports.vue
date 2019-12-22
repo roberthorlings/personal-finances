@@ -89,49 +89,23 @@
                 </v-row>
 
                 <v-row>
-                    <v-col md="3" sm="6" xs="12" >
+                    <v-col sm="6" xs="12" >
                         <v-card
                             class="mx-auto"
                         >
                             <v-card-title>Top expenses</v-card-title>
 
-                            <v-list-item two-line>
-                                <v-list-item-avatar>
-                                    <span title="Dec 14"><v-icon>mdi-calendar</v-icon></span>
-                                </v-list-item-avatar>
-
-                                <v-list-item-content>
-                                    <v-list-item-title>Storting pensioen</v-list-item-title>
-                                    <v-list-item-subtitle>Pensioen</v-list-item-subtitle>
-                                </v-list-item-content>
-
-                                <v-list-item-action>
-                                    <v-chip dark>{{ 2912.12 | toCurrency }}</v-chip>
-                                </v-list-item-action>
-                            </v-list-item>
-
-                            <v-list-item two-line>
-                                <v-list-item-avatar>
-                                    <span title="Mar 7"><v-icon>mdi-calendar</v-icon></span>
-                                </v-list-item-avatar>
-
-                                <v-list-item-content>
-                                    <v-list-item-title>Zomervakantie</v-list-item-title>
-                                    <v-list-item-subtitle>Vakantie</v-list-item-subtitle>
-                                </v-list-item-content>
-
-                                <v-list-item-action>
-                                    <v-chip color="red" dark>{{ 11912.12 | toCurrency }}</v-chip>
-                                </v-list-item-action>
-                            </v-list-item>
-
+                            <top-expenses-list :year="year" />
                         </v-card>
                     </v-col>
-                    <v-col md="9" sm="6" xs="12" >
+                    <v-col sm="6" xs="12" >
                         <v-card
                             class="mx-auto"
                         >
                             <v-card-title>Account balances</v-card-title>
+
+                            <account-balances :year="year" />
+
                         </v-card>
                     </v-col>
                 </v-row>
@@ -217,9 +191,10 @@
                     })
                     .catch(e => {
                         console.error("Error while loading monthly stats for category", this.category_id);
-                        this.$emit('error', {type: 'monthlyStats', message: e.message});
+                        this.$emit('error', {type: 'timeSeriesStats', message: e.message});
                     });
             }
+
         },
         watch: {
             category() {

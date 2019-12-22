@@ -6,6 +6,11 @@ export interface KeyboardShortcut {
     callback: Function
 };
 
+export interface StatsParams {
+    year?:  number,
+    month?: number
+}
+
 export interface CategoryStat extends Identifyable {
     category: Category,
     subtotal: number,

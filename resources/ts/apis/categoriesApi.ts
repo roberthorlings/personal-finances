@@ -1,7 +1,7 @@
 import {Identifyable} from "./genericApi";
 import axios from "axios";
 import genericWithStatsApi from "./genericWithStatsApi";
-import {CategoryStat} from "../types";
+import {CategoryStat, StatsParams} from "../types";
 
 const API_ENDPOINT = '/api/categories';
 
@@ -14,10 +14,6 @@ export interface Category extends Identifyable {
     updated_at: Date
 }
 
-export interface StatsParams {
-    year?:  number,
-    month?: number
-}
 
 export interface CategoryStatsParams extends StatsParams {
     category: number,

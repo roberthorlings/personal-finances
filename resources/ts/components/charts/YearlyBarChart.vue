@@ -8,11 +8,11 @@
 </template>
 
 <script>
-    import {convertSingleStatsToMonthlySeriesData, runningAverage} from "../../charts";
+    import {convertSingleStatsToYearlySeriesData} from "../../charts";
     import GenericBarChart from "./GenericBarChart";
 
     export default {
-        name: 'MonthlyBarChart',
+        name: 'YearlyBarChart',
         components: {GenericBarChart},
         data: () => ({
             series: [],
@@ -25,19 +25,10 @@
               if(!this.stats || !this.stats.category) {
                   this.series = [];
               } else {
-                  const monthlyData = convertSingleStatsToMonthlySeriesData(this.stats.stats);
-                  this.series = [
-                      {
-                          type: 'bar',
-                          name: this.stats.category.name,
-                          data: monthlyData
-                      },
-                      {
-                          type: 'spline',
-                          name: 'Average',
-                          data: runningAverage(monthlyData)
-                      }
-                  ];
+                  this.series = [{
+                      name: this.stats.category.name,
+                      data: convertSingleStatsToYearlySeriesData(this.stats.stats)
+                  }];
               }
           }
         },

@@ -1,4 +1,5 @@
 import {CategoryStat, SingleStat} from "./types";
+import {groupBy, sortBy, toWindows} from "./utils";
 
 export interface CategoryDescription {
     id: number,
@@ -73,11 +74,30 @@ export const convertCategoryStatsToSeriesData = (stats: CategoryStat[]) => {
     }
 };
 
-export const convertSingleStatsToSeriesData = (stats: SingleStat[]): ChartSerieEntry[] => {
+export const convertSingleStatsToMonthlySeriesData = (stats: SingleStat[]): ChartSerieEntry[] => {
     return stats
-        .sort((a, b) => a.year !== b.year ? (a.year - b.year) : (a.month - b.month))
+        .sort(sortBy('year', 'month'))
         .map(stat => ({
            name: new Date(stat.year, stat.month - 1, 1).toLocaleString('default', { month: 'long', year: 'numeric'}),
            y: stat.total
         }));
 };
+
+export const convertSingleStatsToYearlySeriesData = (stats: SingleStat[]): ChartSerieEntry[] => {
+    return Object.entries(groupBy('year')(stats))
+        .map(([year, yearStats]) => ({
+            name: year,
+            y: yearStats.reduce((acc: number, current: any) => acc + current.total, 0)
+        }))
+        .sort(sortBy('name'));
+};
+
+export const runningAverage = (stats: ChartSerieEntry[]): ChartSerieEntry[] => {
+    const windowSize = 3;
+    const nameIndex = Math.floor(windowSize / 2);
+    return toWindows(stats, windowSize)
+        .map((window: ChartSerieEntry[]) => ({
+            name: window[nameIndex].name,
+            y: window.reduce((acc: number, current: any) => acc + current.y, 0) / windowSize
+        }));
+}

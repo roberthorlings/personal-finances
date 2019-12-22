@@ -24,6 +24,13 @@
                 tooltip: {
                     headerFormat: '{series.name} {point.key}<br />',
                     pointFormat: '€{point.y:,.0f}'
+                },
+                plotOptions: {
+                    bar: {
+                        pointWidth: 12,
+                        pointPadding: 0.1,
+                        groupPadding: 0.2
+                    }
                 }
             }
         }),

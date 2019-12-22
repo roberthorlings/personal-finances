@@ -5,6 +5,16 @@
                 <v-col sm="3" xs="12">
                     <v-select :items="years" label="Year" v-model="year"></v-select>
                 </v-col>
+                <v-col sm="3" xs="12">
+                    <v-autocomplete
+                        v-model="category"
+                        :items="categories"
+                        item-value="id"
+                        item-text="text"
+                        label="Category"
+                        auto-select-first
+                    ></v-autocomplete>
+                </v-col>
             </v-row>
             <with-stats :year="year" v-slot="slotProps">
                 <v-row>
@@ -15,7 +25,7 @@
                             <v-card-title>Total income and expenses</v-card-title>
                             <income-expenses-chart
                                 :topLevelCategories="topLevelCategories"
-                                :height="2 * 300 + 64 + 16"
+                                :height="450"
                             />
                         </v-card>
                     </v-col>
@@ -33,42 +43,95 @@
                                     <category-bar-chart
                                         :stats="getIncome(slotProps.stats)"
                                         :legend="false"
-                                        :height="300"
+                                        :height="416"
                                     />
                                 </v-tab-item>
                                 <v-tab-item value="tab-expenses">
                                     <category-bar-chart
                                         :stats="getExpenses(slotProps.stats)"
                                         :legend="false"
-                                        :height="300"
+                                        :height="416"
                                     />
                                 </v-tab-item>
                             </v-tabs>
                         </v-card>
-                        <v-card
-                            class="mx-auto mt-4"
-                        >
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col md="3" sm="6" xs="12" >
+                        <v-card class="mx-auto">
                             <v-card-title>
-                                Per month
-                                <div class="flex-grow-1"></div>
-                                <span style="max-width: 300px">
-                                    <v-autocomplete
-                                        v-model="category"
-                                        :items="categories"
-                                        item-value="id"
-                                        item-text="text"
-                                        label="Category"
-                                        auto-select-first
-                                    ></v-autocomplete>
-                                </span>
+                                {{categoryLabel}} per year
                             </v-card-title>
-                            <div v-if="loadingMonthlyStats">Loading...</div>
-                            <monthly-bar-chart
-                                v-if="!loadingMonthlyStats"
-                                :stats="(monthlyStats)"
+                            <div v-if="loadingTimeSeriesStats">Loading...</div>
+                            <yearly-bar-chart
+                                v-if="!loadingTimeSeriesStats"
+                                :stats="(timeSeriesStats)"
                                 :legend="false"
                                 :height="300"
                             />
+                        </v-card>
+                    </v-col>
+                    <v-col md="9" sm="6" xs="12" >
+                        <v-card class="mx-auto">
+                            <v-card-title>
+                                {{categoryLabel}} per month
+                            </v-card-title>
+                            <div v-if="loadingTimeSeriesStats">Loading...</div>
+                            <monthly-bar-chart
+                                v-if="!loadingTimeSeriesStats"
+                                :stats="(selectedTimeSeriesStats)"
+                                :legend="false"
+                                :height="300"
+                            />
+                        </v-card>
+                    </v-col>
+                </v-row>
+
+                <v-row>
+                    <v-col md="3" sm="6" xs="12" >
+                        <v-card
+                            class="mx-auto"
+                        >
+                            <v-card-title>Top expenses</v-card-title>
+
+                            <v-list-item two-line>
+                                <v-list-item-avatar>
+                                    <span title="Dec 14"><v-icon>mdi-calendar</v-icon></span>
+                                </v-list-item-avatar>
+
+                                <v-list-item-content>
+                                    <v-list-item-title>Storting pensioen</v-list-item-title>
+                                    <v-list-item-subtitle>Pensioen</v-list-item-subtitle>
+                                </v-list-item-content>
+
+                                <v-list-item-action>
+                                    <v-chip dark>{{ 2912.12 | toCurrency }}</v-chip>
+                                </v-list-item-action>
+                            </v-list-item>
+
+                            <v-list-item two-line>
+                                <v-list-item-avatar>
+                                    <span title="Mar 7"><v-icon>mdi-calendar</v-icon></span>
+                                </v-list-item-avatar>
+
+                                <v-list-item-content>
+                                    <v-list-item-title>Zomervakantie</v-list-item-title>
+                                    <v-list-item-subtitle>Vakantie</v-list-item-subtitle>
+                                </v-list-item-content>
+
+                                <v-list-item-action>
+                                    <v-chip color="red" dark>{{ 11912.12 | toCurrency }}</v-chip>
+                                </v-list-item-action>
+                            </v-list-item>
+
+                        </v-card>
+                    </v-col>
+                    <v-col md="9" sm="6" xs="12" >
+                        <v-card
+                            class="mx-auto"
+                        >
+                            <v-card-title>Account balances</v-card-title>
                         </v-card>
                     </v-col>
                 </v-row>
@@ -89,12 +152,27 @@
     export default {
         name: 'Reports',
         components: {IncomeExpensesChart, CategoryBarChart},
+        computed: {
+            categoryLabel() {
+                const category = this.categories.find(cat => cat.id === this.category);
+                return category ? category.text.replace(/^-+/, "") : '';
+            },
+            selectedTimeSeriesStats() {
+                if(!this.year || !this.timeSeriesStats)
+                    return this.timeSeriesStats;
+
+                return {
+                    ...this.timeSeriesStats,
+                    stats: this.timeSeriesStats.stats.filter(s => s.year == this.year)
+                }
+            }
+        },
         data: () => ({
             topLevelCategories: [],
             categories: [],
             category: null,
-            loadingMonthlyStats: false,
-            monthlyStats: {},
+            loadingTimeSeriesStats: false,
+            timeSeriesStats: {},
             year: null,
             years: [
                 {text: 'all years', value: null},
@@ -130,10 +208,12 @@
                         this.$emit('error', {type: 'categories', message: e.message});
                     });
             },
-            loadMonthlyStats: function() {
-                CategoriesApi.categoryStats({category: this.category, year: this.year})
+            loadTimeSeriesStats: function() {
+                this.loadingTimeSeriesStats = true
+                CategoriesApi.categoryStats({category: this.category})
                     .then(data => {
-                        this.monthlyStats = data;
+                        this.timeSeriesStats = data;
+                        this.loadingTimeSeriesStats = false
                     })
                     .catch(e => {
                         console.error("Error while loading monthly stats for category", this.category_id);
@@ -143,10 +223,10 @@
         },
         watch: {
             category() {
-                this.loadMonthlyStats();
+                this.loadTimeSeriesStats();
             },
             year() {
-                this.loadMonthlyStats();
+                this.loadTimeSeriesStats();
             }
         }
     }

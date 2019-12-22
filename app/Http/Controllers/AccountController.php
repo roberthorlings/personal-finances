@@ -6,6 +6,7 @@ use App\Model\Statistics\AccountStatsGenerator;
 use Illuminate\Http\Request;
 use App\Model\Account;
 use App\Resources\Account as AccountResource;
+use App\Resources\AccountStats as AccountStatsResource;
 
 class AccountController extends Controller
 {
@@ -83,5 +84,23 @@ class AccountController extends Controller
         $stats = $generator->run();
 
         return response()->json(["numStats" => count($stats)], 201);
+    }
+
+
+    /**
+     * Returns a tree structure with summary statistics for all categories
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function stats(Request $request)
+    {
+        $input = $request->validate([
+            'year' => 'required',
+            'month' => 'required'
+        ]);
+
+        return AccountStatsResource::collection(
+            Account::withStats($input['year'], $input['month'])->get()
+        );
     }
 }

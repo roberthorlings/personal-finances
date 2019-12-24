@@ -17,13 +17,13 @@
                         <thead>
                             <tr>
                                 <th>Category</th>
-                                <th v-for="bin in slotProps.bins">{{bin.text}}</th>
+                                <th v-for="bin in slotProps.bins" align="right">{{bin.text}}</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="stat in slotProps.stats">
                                 <td>{{stat.text}}</td>
-                                <td v-for="value in stat.total"><v-chip :color="value < 0 ? 'red' : ' green'" dark>{{ value | toCurrency }}</v-chip></td>
+                                <td v-for="value in stat.total" align="right">{{ value | toCurrency }}</td>
                             </tr>
                         </tbody>
                     </v-simple-table>

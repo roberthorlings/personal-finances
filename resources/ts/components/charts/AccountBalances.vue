@@ -4,20 +4,34 @@
             <tr>
                 <th>Account</th>
                 <th>IBAN</th>
-                <th>Start balance</th>
-                <th>End balance</th>
+                <th align="right">Start balance</th>
+                <th align="right">End balance</th>
             </tr>
         </thead>
         <tbody>
             <tr v-for="account in accounts">
                 <td>{{account.name}}</td>
                 <td>{{account.iban}}</td>
-                <td><v-chip :color="account.startBalance < 0 ? 'red' : ' green'" dark>{{ account.startBalance | toCurrency }}</v-chip></td>
-                <td><v-chip :color="account.endBalance < 0 ? 'red' : ' green'" dark>{{ account.endBalance | toCurrency }}</v-chip></td>
+                <td align="right">{{ account.startBalance | toCurrency }}</td>
+                <td align="right">{{ account.endBalance | toCurrency }} </td>
             </tr>
         </tbody>
+        <tfoot class="total">
+            <tr>
+                <td colspan="2">Total</td>
+                <td align="right">{{ sum.startBalance | toCurrency }}</td>
+                <td align="right">{{ sum.endBalance | toCurrency }}</td>
+            </tr>
+        </tfoot>
     </v-simple-table>
 </template>
+
+<style>
+    tfoot.total td {
+        border-top: 1px solid rgba(0, 0, 0, 0.12);
+        font-weight: bold;
+    }
+</style>
 
 <script>
     import accountsApi from "../../apis/accountsApi";
@@ -25,6 +39,17 @@
 
     export default {
         name: 'AccountBalances',
+        computed: {
+            sum() {
+                return this.accounts.reduce(
+                    (acc, current) => ({
+                        startBalance: acc.startBalance + current.startBalance,
+                        endBalance: acc.endBalance + current.endBalance
+                    }),
+                    {startBalance: 0, endBalance: 0}
+                )
+            }
+        },
         data: () => ({
             loadingBalances: false,
             accounts: [],
@@ -41,11 +66,13 @@
                     // by default
                     const accounts = await accountsApi.list();
 
-                    this.accounts = accounts.items.map(account => ({
-                        ...account,
-                        startBalance: 0,
-                        endBalance: account.balance
-                    }));
+                    this.accounts = accounts.items
+                        .filter(account => account.balance > 0)
+                        .map(account => ({
+                            ...account,
+                            startBalance: 0,
+                            endBalance: account.balance
+                        }));
                 } else {
                     // The balances are measured at the end of each month. So, the start
                     // balance for january is the balance measured at december previous year
@@ -53,17 +80,19 @@
                     const endBalances = await accountsApi.stats({year: this.year, month: 12});
 
                     // Combine the two lists.
-                    this.accounts = startBalances.map(accountData => {
-                        const startBalance = accountData.stats ? accountData.stats.balance : 0;
-                        const endBalanceAccount = endBalances.find(otherAccountData => otherAccountData.account.id == accountData.account.id);
-                        const endBalance = endBalanceAccount && endBalanceAccount.stats ? endBalanceAccount.stats.balance : 0;
+                    this.accounts = startBalances
+                        .map(accountData => {
+                            const startBalance = accountData.stats ? accountData.stats.balance : 0;
+                            const endBalanceAccount = endBalances.find(otherAccountData => otherAccountData.account.id == accountData.account.id);
+                            const endBalance = endBalanceAccount && endBalanceAccount.stats ? endBalanceAccount.stats.balance : 0;
 
-                        return {
-                            ...accountData.account,
-                            startBalance,
-                            endBalance
-                        }
-                    });
+                            return {
+                                ...accountData.account,
+                                startBalance,
+                                endBalance
+                            }
+                        })
+                        .filter(data => data.startBalance != 0 || data.endBalance != 0);
                 }
 
                 this.loadingBalances = false;

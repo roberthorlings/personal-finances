@@ -16,6 +16,7 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
     const COLUMN_DESCRIPTION = 7;
 
     const MAX_DESCRIPTION_LENGTH = 2000;
+    const MAX_ACCOUNT_NAME_LENGTH = 255;
     const CATEGORY_KEY_TRANSFERS = 'overboekingen';
     const OPPOSING_ACCOUNT_NAME = 'opposing_account_name';
     const OPPOSING_ACCOUNT_IBAN = 'opposing_account_iban';
@@ -80,8 +81,13 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
             }
 
             if(strlen($transactionInfo[self::DESCRIPTION]) > self::MAX_DESCRIPTION_LENGTH) {
-                Log::warning("Truncating description for line #" . $idx . " to 255 characters", $row);
+                Log::warning("Truncating description for line #" . $idx . " to " . self::MAX_DESCRIPTION_LENGTH . " characters", $row);
                 $transactionInfo[self::DESCRIPTION] = substr($transactionInfo[self::DESCRIPTION], 0, self::MAX_DESCRIPTION_LENGTH);
+            }
+
+            if(strlen($transactionInfo[self::OPPOSING_ACCOUNT_NAME]) > self::MAX_ACCOUNT_NAME_LENGTH) {
+                Log::warning("Truncating account name for line #" . $idx . " to " . self::MAX_ACCOUNT_NAME_LENGTH . " characters", $row);
+                $transactionInfo[self::OPPOSING_ACCOUNT_NAME] = substr($transactionInfo[self::OPPOSING_ACCOUNT_NAME], 0, self::MAX_ACCOUNT_NAME_LENGTH);
             }
 
             // A transfer is added to the transfer category
@@ -198,13 +204,19 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
      */
     private function parseSepaDescriptionField(string $description, array $fields)
     {
-        $parsed = [];
+        $parsed = [
+            "Naam" => "",
+            "IBAN" => "",
+            "Omschrijving" => ""
+        ];
         $start = $this->getValueStart($description, $fields[0]);
 
         if($start == -1) {
             Log::warning("Trying to parse SEPA description, but first field " . $fields[0] . " was not found", compact('description', 'fields'));
             return [];
         }
+
+        Log::info("Parsing [" . $description . "] with fields", $fields);
 
         for($i = 0; $i < count($fields); $i++) {
             $field = $fields[$i];
@@ -214,7 +226,7 @@ class AbnAmroTransactionsParser implements TransactionFileParser {
                 $nextpos = strpos($description, $next, $start);
 
                 // If the next field is not found, use the rest of the description
-                if($nextpos == -1) {
+                if($nextpos === false) {
                     Log::debug("Expected SEPA field " . $next . " was not found in description.", compact('description', 'next'));
                     $value = substr($description, $start);
                     $parsed[$field] = trim($value);

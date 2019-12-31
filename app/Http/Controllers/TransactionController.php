@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Model\Category;
 use App\Model\Import\TransactionFileParserFactory;
+use App\Model\RuleEngine;
 use App\Model\Statistics\AccountStatsGenerator;
 use App\Model\Statistics\CategoryStatsGenerator;
 use App\Model\Transaction;
 use App\Resources\Transaction as TransactionResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class TransactionController extends Controller
@@ -87,10 +89,23 @@ class TransactionController extends Controller
 
         $transactions = $importer->parseFile($file);
 
+        // Try categorizing the transactions
+        // With bulk upload, events are not triggered, so we have to do it manually
+        $ruleEngine = new RuleEngine();
+        $ruleEngine->init();
+
+        $categorizedTransactions = Collection::make($transactions)->map(function($transactionData) use($ruleEngine) {
+            $transaction = new Transaction($transactionData);
+            $ruleEngine->applyRules($transaction);
+            return $transaction;
+        })->toArray();
+
         if(!$request->get("dryRun")) {
             // Start importing
-            Transaction::insert($transactions);
-            Log::info("Imported " . count($transactions) . " into the database");
+            Transaction::insert($categorizedTransactions);
+            Log::info("Imported " . count($categorizedTransactions) . " into the database");
+        } else {
+            Log::info("Not storing " . count($transactions) . " because dry-run is set to true");
         }
 
         return response()->json(["transactionCount" => count($transactions)], 201);

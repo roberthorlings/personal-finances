@@ -1,6 +1,6 @@
 <template>
     <v-list v-if="!loadingTransactions">
-        <v-list-item two-line v-for="transaction in transactions">
+        <v-list-item two-line v-for="transaction in transactions" :key="transaction.id">
             <v-list-item-avatar>
                 <span :title="transaction.date"><v-icon>mdi-calendar</v-icon></span>
             </v-list-item-avatar>

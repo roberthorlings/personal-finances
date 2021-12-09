@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
 //        if(env('APP_DEBUG')) {
 //            DB::listen(function($query) {
 //                File::append(

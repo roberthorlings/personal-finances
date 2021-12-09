@@ -31,7 +31,7 @@
                         .filter((v) => !this.isBinEmpty(v.id))
 
                 } else {
-                    return [2015, 2016, 2017, 2018, 2019, 2020]
+                    return [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023]
                         .map(year => ({
                             id: year,
                             filter: {year},
